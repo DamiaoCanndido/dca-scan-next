@@ -3,6 +3,11 @@ import { LuEye, LuEyeOff } from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useState } from 'react';
+import { api } from '@/lib/axios';
+import { AxiosError } from 'axios';
+import { AuthContextGlobal } from '@/contexts/auth';
+import { useToast } from '@/components/ui/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 
 export default function Page() {
   const router = useRouter();
@@ -11,12 +16,35 @@ export default function Page() {
   const [typePW, setTypePW] = useState('password');
   const [showPassword, setShowPassword] = useState(false);
 
+  const { toast } = useToast();
+
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
+  };
+
+  const { setUsername } = AuthContextGlobal();
+
+  const Login = async () => {
+    try {
+      const res = await api.post('/login', {
+        email,
+        password,
+      });
+      setUsername(res.data.username);
+      router.replace('/decree');
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: error.response?.data.message,
+          variant: 'destructive',
+          action: <ToastAction altText="fechar">fechar</ToastAction>,
+        });
+      }
+    }
   };
 
   const toggleShowPassword = () => {
@@ -73,6 +101,7 @@ export default function Page() {
             />
             <button
               onClick={toggleShowPassword}
+              type="button"
               className="absolute top-1/2 right-3 -translate-y-1/2"
             >
               {showPassword ? <LuEye /> : <LuEyeOff />}
@@ -81,7 +110,7 @@ export default function Page() {
 
           <div>
             <button
-              onClick={() => router.replace('/decree')}
+              onClick={Login}
               type="button"
               className="flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >

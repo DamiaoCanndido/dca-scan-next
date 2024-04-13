@@ -1,10 +1,15 @@
 'use client';
 import { SideBarContextGlobal } from '@/contexts/siderbar';
 import Image from 'next/image';
+import { useEffect } from 'react';
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 
 export const Header = () => {
   const { showSideBar, setShowSideBar } = SideBarContextGlobal();
+
+  useEffect(() => {
+    setShowSideBar(false);
+  }, []);
 
   const toggleSideBar = () => {
     setShowSideBar(!showSideBar);

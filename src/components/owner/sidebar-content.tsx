@@ -2,12 +2,14 @@
 import { LuLogOut, LuBookMarked, LuUser2 } from 'react-icons/lu';
 import Link from 'next/link';
 import { ComponentProps } from 'react';
+import { AuthContextGlobal } from '@/contexts/auth';
 
 interface IconButtonProps extends ComponentProps<'aside'> {
   visible?: boolean;
 }
 
 export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
+  const { username } = AuthContextGlobal();
   return (
     <>
       <aside
@@ -23,7 +25,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             <div className="align-center self-center pr-2">
               <LuUser2 size={30} />
             </div>
-            <p>PASSAGEMPB</p>
+            <p>{username}</p>
           </div>
           <div className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center">
             <LuBookMarked size={30} />
