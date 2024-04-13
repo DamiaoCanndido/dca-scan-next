@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import {
   LuMoreHorizontal,
   LuChevronLeft,
@@ -6,8 +5,9 @@ import {
   LuChevronRight,
   LuChevronsRight,
 } from 'react-icons/lu';
+import { IconButton } from './icon-button';
 
-export const Teams = () => {
+export const Dashboard = () => {
   return (
     <table className="border w-full border-green-600 rounded-lg mt-28 ml-48 max-lg:ml-0">
       <thead className="border-b border-green-600">
@@ -18,9 +18,9 @@ export const Teams = () => {
               className="size-4 rounded border border-green-600"
             />
           </th>
-          <th className="text-left">Escudo</th>
-          <th className="text-left">Nome</th>
-          <th className="text-left">Código</th>
+          <th className="text-left">Ordem</th>
+          <th className="text-left">Descrição</th>
+          <th className="text-left">data</th>
           <th className="text-left"></th>
         </tr>
       </thead>
@@ -37,20 +37,13 @@ export const Teams = () => {
                   className="size-4 rounded border border-green-600"
                 />
               </td>
-              <td>
-                <Image
-                  src="https://seeklogo.com/images/B/Brazil-logo-FDA32A35FD-seeklogo.com.png"
-                  width={30}
-                  height={30}
-                  alt=""
-                />
-              </td>
-              <td>Brasil</td>
-              <td>BRA</td>
+              <td>1</td>
+              <td>Teste</td>
+              <td>13-04-2024</td>
               <td style={{ width: 64 }}>
-                <button className="border bg-green-100 border-green-600 rounded-md p-1.5">
+                <IconButton>
                   <LuMoreHorizontal color="green" size={20} />
-                </button>
+                </IconButton>
               </td>
             </tr>
           );
@@ -66,18 +59,18 @@ export const Teams = () => {
             <div className="inline-flex items-center gap-8">
               <span>Página 1 de 2</span>
               <div className="flex gap-1">
-                <button className="border bg-green-100 border-green-600 rounded-md p-1.5">
+                <IconButton>
                   <LuChevronsLeft color="green" size={20} />
-                </button>
-                <button className="border bg-green-100 border-green-600 rounded-md p-1.5">
+                </IconButton>
+                <IconButton>
                   <LuChevronLeft color="green" size={20} />
-                </button>
-                <button className="border bg-green-100 border-green-600 rounded-md p-1.5">
+                </IconButton>
+                <IconButton>
                   <LuChevronRight color="green" size={20} />
-                </button>
-                <button className="border bg-green-100 border-green-600 rounded-md p-1.5">
+                </IconButton>
+                <IconButton>
                   <LuChevronsRight color="green" size={20} />
-                </button>
+                </IconButton>
               </div>
             </div>
           </td>

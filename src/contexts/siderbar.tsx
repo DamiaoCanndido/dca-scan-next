@@ -28,7 +28,7 @@ const SideBarContext = createContext<ContextProps>({
 
 export const SideBarContextProvider = (props: childrenType) => {
   const [showSideBar, setShowSideBar] = useState(false);
-  const [sideBarItem, setSideBarItem] = useState('teams');
+  const [sideBarItem, setSideBarItem] = useState('decrees');
 
   return (
     <SideBarContext.Provider

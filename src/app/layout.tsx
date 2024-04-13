@@ -10,8 +10,8 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: 'Match manager',
-  description: 'Match manager',
+  title: 'DCA Scan',
+  description: 'DCA Scan',
 };
 
 export default function RootLayout({
