@@ -5,11 +5,19 @@ import {
   LuChevronRight,
   LuChevronsRight,
 } from 'react-icons/lu';
+import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
+import utc from 'dayjs/plugin/utc';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { IconButton } from './icon-button';
+
+dayjs.extend(relativeTime);
+dayjs.locale('pt-br');
+dayjs.extend(utc);
 
 export const Dashboard = () => {
   return (
-    <table className="border w-full border-green-600 rounded-lg mt-28 ml-48 max-lg:ml-0">
+    <table className="border w-full border-green-600 rounded-lg mt-16 ml-48 max-lg:ml-0">
       <thead className="border-b border-green-600">
         <tr>
           <th style={{ width: 64 }} className="text-left pl-2 py-3">
@@ -39,7 +47,14 @@ export const Dashboard = () => {
               </td>
               <td>1</td>
               <td>Teste</td>
-              <td>13-04-2024</td>
+              <td>
+                {dayjs().to(
+                  dayjs
+                    .utc('2024-04-14T09:50:00.000Z')
+                    .utcOffset(-3, true)
+                    .format()
+                )}
+              </td>
               <td style={{ width: 64 }}>
                 <IconButton>
                   <LuMoreHorizontal color="green" size={20} />
@@ -49,7 +64,7 @@ export const Dashboard = () => {
           );
         })}
       </tbody>
-      <tfoot>
+      {/* <tfoot>
         <tr>
           <td className="pl-2 py-2.5" colSpan={2}>
             Mostrando 10 de 28 itens
@@ -75,7 +90,7 @@ export const Dashboard = () => {
             </div>
           </td>
         </tr>
-      </tfoot>
+      </tfoot> */}
     </table>
   );
 };

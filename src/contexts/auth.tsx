@@ -14,10 +14,10 @@ export interface childrenType {
 }
 
 interface ContextProps {
-  username: string;
+  username?: string;
   setUsername: Dispatch<SetStateAction<string>>;
   token: string;
-  setToken: Dispatch<SetStateAction<string>>;
+  setToken?: Dispatch<SetStateAction<string>>;
 }
 
 const AuthContext = createContext<ContextProps>({
