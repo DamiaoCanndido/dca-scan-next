@@ -51,7 +51,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             <span className="px-1 text-sm">Portarias</span>
           </div>
           <Link
-            href="/"
+            href="/login"
             replace={true}
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-red-200 items-center text-red-600"
             onClick={() => {

@@ -1,13 +1,16 @@
 import { Header } from '@/components/owner/header';
 import { SideBar } from '@/components/owner/sidebar';
-import { Dashboard } from '@/components/owner/teams';
 
-export default function Page() {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex">
+      {children}
       <Header />
       <SideBar />
-      <Dashboard />
     </div>
   );
 }
