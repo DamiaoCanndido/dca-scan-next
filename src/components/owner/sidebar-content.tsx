@@ -5,6 +5,7 @@ import { deleteCookie, getCookie } from 'cookies-next';
 import { ComponentProps, useEffect } from 'react';
 import { AuthContextGlobal } from '@/contexts/auth';
 import { clearCookies } from '@/helpers/cookies';
+import { SideBarContextGlobal } from '@/contexts/siderbar';
 
 interface IconButtonProps extends ComponentProps<'aside'> {
   visible?: boolean;
@@ -12,6 +13,7 @@ interface IconButtonProps extends ComponentProps<'aside'> {
 
 export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
   const { username, setUsername } = AuthContextGlobal();
+  const { setShowSideBar } = SideBarContextGlobal();
 
   useEffect(() => {
     setUsername(getCookie('user')!);
@@ -34,22 +36,46 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             </div>
             <p>{username}</p>
           </div>
-          <div className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center">
+          <Link
+            href="/office/decree"
+            className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
+            onClick={() => {
+              setShowSideBar(false);
+            }}
+          >
             <LuBookMarked size={30} />
             <span className="px-1 text-sm">Decretos</span>
-          </div>
-          <div className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center">
+          </Link>
+          <Link
+            href="/office/notice"
+            className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
+            onClick={() => {
+              setShowSideBar(false);
+            }}
+          >
             <LuBookMarked size={30} />
             <span className="px-1 text-sm">Ofícios</span>
-          </div>
-          <div className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center">
+          </Link>
+          <Link
+            href="/office/law"
+            className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
+            onClick={() => {
+              setShowSideBar(false);
+            }}
+          >
             <LuBookMarked size={30} />
             <span className="px-1 text-sm">Leis</span>
-          </div>
-          <div className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center">
+          </Link>
+          <Link
+            href="/office/ordinance"
+            className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
+            onClick={() => {
+              setShowSideBar(false);
+            }}
+          >
             <LuBookMarked size={30} />
             <span className="px-1 text-sm">Portarias</span>
-          </div>
+          </Link>
           <Link
             href="/login"
             replace={true}

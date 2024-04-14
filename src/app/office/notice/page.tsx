@@ -8,19 +8,19 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Page() {
-  const [decrees, setDecrees] = useState([]);
+  const [notices, setNotices] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = getCookie('token');
-        const result = await api.get('/decree', {
+        const result = await api.get('/notice', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setDecrees(result.data);
+        setNotices(result.data);
       } catch (error) {
         if (error instanceof AxiosError) {
           clearCookies(['user', 'token']);
@@ -30,5 +30,5 @@ export default function Page() {
     };
     fetchData();
   }, []);
-  return <Dashboard data={decrees} />;
+  return <Dashboard data={notices} />;
 }

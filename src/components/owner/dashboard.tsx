@@ -10,12 +10,13 @@ import 'dayjs/locale/pt-br';
 import utc from 'dayjs/plugin/utc';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { IconButton } from './icon-button';
+import { ApiData } from '@/entities/api-data';
 
 dayjs.extend(relativeTime);
 dayjs.locale('pt-br');
 dayjs.extend(utc);
 
-export const Dashboard = () => {
+export const Dashboard = ({ data }: ApiData) => {
   return (
     <table className="border w-full border-green-600 rounded-lg mt-16 ml-48 max-lg:ml-0">
       <thead className="border-b border-green-600">
@@ -33,10 +34,10 @@ export const Dashboard = () => {
         </tr>
       </thead>
       <tbody>
-        {Array.from({ length: 30 }).map((_, i) => {
+        {data.map((k) => {
           return (
             <tr
-              key={i}
+              key={k.id}
               className="border-b border-green-600 hover:bg-green-100"
             >
               <td style={{ width: 64 }} className="pl-2 py-2.5">
@@ -45,16 +46,9 @@ export const Dashboard = () => {
                   className="size-4 rounded border border-green-600"
                 />
               </td>
-              <td>1</td>
-              <td>Teste</td>
-              <td>
-                {dayjs().to(
-                  dayjs
-                    .utc('2024-04-14T09:50:00.000Z')
-                    .utcOffset(-3, true)
-                    .format()
-                )}
-              </td>
+              <td>{k.order}</td>
+              <td>{k.description}</td>
+              <td>{dayjs().to(k.createdAt)}</td>
               <td style={{ width: 64 }}>
                 <IconButton>
                   <LuMoreHorizontal color="green" size={20} />
