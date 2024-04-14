@@ -1,15 +1,22 @@
 'use client';
 import { LuLogOut, LuBookMarked, LuUser2 } from 'react-icons/lu';
 import Link from 'next/link';
-import { ComponentProps } from 'react';
+import { deleteCookie, getCookie } from 'cookies-next';
+import { ComponentProps, useEffect } from 'react';
 import { AuthContextGlobal } from '@/contexts/auth';
+import { clearCookies } from '@/helpers/cookies';
 
 interface IconButtonProps extends ComponentProps<'aside'> {
   visible?: boolean;
 }
 
 export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
-  const { username } = AuthContextGlobal();
+  const { username, setUsername } = AuthContextGlobal();
+
+  useEffect(() => {
+    setUsername(getCookie('user')!);
+  }, []);
+
   return (
     <>
       <aside
@@ -47,6 +54,9 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             href="/"
             replace={true}
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-red-200 items-center text-red-600"
+            onClick={() => {
+              clearCookies(['user', 'token']);
+            }}
           >
             <LuLogOut size={30} />
             <span className="px-1 text-sm">Sair</span>

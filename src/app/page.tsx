@@ -5,9 +5,9 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { api } from '@/lib/axios';
 import { AxiosError } from 'axios';
-import { AuthContextGlobal } from '@/contexts/auth';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
+import { createCookies } from '@/helpers/cookies';
 
 export default function Page() {
   const router = useRouter();
@@ -26,15 +26,14 @@ export default function Page() {
     setPassword(event.target.value);
   };
 
-  const { setUsername } = AuthContextGlobal();
-
   const Login = async () => {
     try {
       const res = await api.post('/login', {
         email,
         password,
       });
-      setUsername(res.data.username);
+      createCookies('user', res.data.username);
+      createCookies('token', res.data.token);
       router.replace('/decree');
     } catch (error) {
       if (error instanceof AxiosError) {
