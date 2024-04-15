@@ -30,5 +30,5 @@ export default function Page() {
     };
     fetchData();
   }, []);
-  return <Dashboard data={law} />;
+  return <Dashboard data={law} slug="/law" />;
 }

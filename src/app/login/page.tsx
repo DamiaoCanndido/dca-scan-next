@@ -100,7 +100,7 @@ export default function Page() {
             />
             <button
               onClick={toggleShowPassword}
-              type="button"
+              type="submit"
               className="absolute top-1/2 right-3 -translate-y-1/2"
             >
               {showPassword ? <LuEye /> : <LuEyeOff />}

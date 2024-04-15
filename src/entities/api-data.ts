@@ -6,5 +6,7 @@ export interface ApiData {
     file: string[];
     ownerId: string;
     createdAt: string;
+    url: string;
   }[];
+  slug: string;
 }

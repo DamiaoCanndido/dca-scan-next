@@ -30,5 +30,5 @@ export default function Page() {
     };
     fetchData();
   }, []);
-  return <Dashboard data={ordinance} />;
+  return <Dashboard data={ordinance} slug="/ordinance" />;
 }

@@ -16,7 +16,7 @@ dayjs.extend(relativeTime);
 dayjs.locale('pt-br');
 dayjs.extend(utc);
 
-export const Dashboard = ({ data }: ApiData) => {
+export const Dashboard = ({ data, slug }: ApiData) => {
   return (
     <table className="border w-full border-green-600 rounded-lg mt-16 ml-48 max-lg:ml-0">
       <thead className="border-b border-green-600">
@@ -41,6 +41,7 @@ export const Dashboard = ({ data }: ApiData) => {
               title="Novo documento"
               description="Escreva uma descrição."
               action="Criar"
+              data={{ slug }}
             />
           </th>
         </tr>
@@ -78,6 +79,7 @@ export const Dashboard = ({ data }: ApiData) => {
                       title="Editar documento"
                       description="Escreva uma descrição."
                       action="Editar"
+                      data={{ slug }}
                     />
                     <DropdownMenuItem>Deletar</DropdownMenuItem>
                   </DropdownMenuContent>

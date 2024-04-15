@@ -30,5 +30,5 @@ export default function Page() {
     };
     fetchData();
   }, []);
-  return <Dashboard data={decrees} />;
+  return <Dashboard data={decrees} slug="/decree" />;
 }
