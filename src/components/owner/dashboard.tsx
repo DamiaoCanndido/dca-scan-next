@@ -1,16 +1,16 @@
-import {
-  LuMoreHorizontal,
-  LuChevronLeft,
-  LuChevronsLeft,
-  LuChevronRight,
-  LuChevronsRight,
-} from 'react-icons/lu';
+import { LuMoreHorizontal, LuPlus } from 'react-icons/lu';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import utc from 'dayjs/plugin/utc';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { IconButton } from './icon-button';
 import { ApiData } from '@/entities/api-data';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { MyDialog } from './dialog';
 
 dayjs.extend(relativeTime);
 dayjs.locale('pt-br');
@@ -27,10 +27,22 @@ export const Dashboard = ({ data }: ApiData) => {
               className="size-4 rounded border border-green-600"
             />
           </th>
-          <th className="text-left">Ordem</th>
+          <th className="text-left self-end">Ordem</th>
           <th className="text-left">Descrição</th>
           <th className="text-left">data</th>
-          <th className="text-left"></th>
+          <th className="text-left">
+            <MyDialog
+              myDiv={
+                <div className="flex items-center justify-center w-20 h-9 bg-green-600 hover:bg-green-300 rounded-md cursor-pointer">
+                  <LuPlus color="white" size={20} />
+                  <span className="text-white">Add</span>
+                </div>
+              }
+              title="Novo documento"
+              description="Escreva uma descrição."
+              action="Criar"
+            />
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -50,9 +62,17 @@ export const Dashboard = ({ data }: ApiData) => {
               <td>{k.description}</td>
               <td>{dayjs().to(k.createdAt)}</td>
               <td style={{ width: 64 }}>
-                <IconButton>
-                  <LuMoreHorizontal color="green" size={20} />
-                </IconButton>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <div className="flex items-center justify-center size-9 bg-green-200 hover:bg-green-600 rounded-md">
+                      <LuMoreHorizontal color="green" size={20} />
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>Editar</DropdownMenuItem>
+                    <DropdownMenuItem>Deletar</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </td>
             </tr>
           );
