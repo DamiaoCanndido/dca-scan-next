@@ -34,7 +34,7 @@ export default function Page() {
       });
       createCookies('user', res.data.username);
       createCookies('token', res.data.token);
-      router.replace('/office/decree');
+      router.replace('/decree');
     } catch (error) {
       if (error instanceof AxiosError) {
         toast({

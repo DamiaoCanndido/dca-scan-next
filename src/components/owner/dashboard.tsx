@@ -64,7 +64,7 @@ export const Dashboard = ({ data, slug }: ApiData) => {
               <td>{dayjs().to(k.createdAt)}</td>
               <td style={{ width: 64 }}>
                 <DropdownMenu>
-                  <DropdownMenuTrigger>
+                  <DropdownMenuTrigger asChild>
                     <div className="flex items-center justify-center size-9 bg-green-200 hover:bg-green-600 rounded-md">
                       <LuMoreHorizontal color="green" size={20} />
                     </div>
@@ -72,7 +72,7 @@ export const Dashboard = ({ data, slug }: ApiData) => {
                   <DropdownMenuContent>
                     <MyDialog
                       myDiv={
-                        <div className="flex justify-center hover:bg-green-200 cursor-pointer">
+                        <div className="flex hover:bg-green-200 cursor-pointer">
                           Editar
                         </div>
                       }
@@ -81,7 +81,17 @@ export const Dashboard = ({ data, slug }: ApiData) => {
                       action="Editar"
                       data={{ slug }}
                     />
-                    <DropdownMenuItem>Deletar</DropdownMenuItem>
+                    <MyDialog
+                      myDiv={
+                        <div className="flex hover:bg-green-200 cursor-pointer">
+                          Deletar
+                        </div>
+                      }
+                      title="Deletar documento"
+                      description="Escreva uma descrição."
+                      action="Deletar"
+                      data={{ slug }}
+                    />
                   </DropdownMenuContent>
                 </DropdownMenu>
               </td>

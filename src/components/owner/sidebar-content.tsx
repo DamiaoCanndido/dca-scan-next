@@ -37,7 +37,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             <p>{username}</p>
           </div>
           <Link
-            href="/office/decree"
+            href="/decree"
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
             onClick={() => {
               setShowSideBar(false);
@@ -47,7 +47,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             <span className="px-1 text-sm">Decretos</span>
           </Link>
           <Link
-            href="/office/notice"
+            href="/notice"
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
             onClick={() => {
               setShowSideBar(false);
@@ -57,7 +57,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             <span className="px-1 text-sm">Ofícios</span>
           </Link>
           <Link
-            href="/office/law"
+            href="/law"
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
             onClick={() => {
               setShowSideBar(false);
@@ -67,7 +67,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             <span className="px-1 text-sm">Leis</span>
           </Link>
           <Link
-            href="/office/ordinance"
+            href="/ordinance"
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
             onClick={() => {
               setShowSideBar(false);
