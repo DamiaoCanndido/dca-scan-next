@@ -69,7 +69,16 @@ export const Dashboard = ({ data }: ApiData) => {
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem>Editar</DropdownMenuItem>
+                    <MyDialog
+                      myDiv={
+                        <div className="flex justify-center hover:bg-green-200 cursor-pointer">
+                          Editar
+                        </div>
+                      }
+                      title="Editar documento"
+                      description="Escreva uma descrição."
+                      action="Editar"
+                    />
                     <DropdownMenuItem>Deletar</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

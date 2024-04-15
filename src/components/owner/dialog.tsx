@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 
 interface HTMLProps {
-  myDiv: JSX.Element;
+  myDiv?: JSX.Element;
   title: string;
   description: string;
   action: string;
