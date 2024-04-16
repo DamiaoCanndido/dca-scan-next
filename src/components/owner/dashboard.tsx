@@ -8,16 +8,164 @@ import { ApiData } from '@/entities/api-data';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/components/ui/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 import { MyDialog } from './dialog';
+import { api } from '@/lib/axios';
+import { getCookie } from 'cookies-next';
+import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { clearCookies } from '@/helpers/cookies';
 
 dayjs.extend(relativeTime);
 dayjs.locale('pt-br');
 dayjs.extend(utc);
 
-export const Dashboard = ({ data, slug }: ApiData) => {
+interface TodoList {
+  id?: string;
+  description?: string;
+  order?: string;
+  createdAt?: string;
+}
+
+export const Dashboard = ({ slug }: ApiData) => {
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const [files, setFiles] = useState<ApiData[]>([]);
+  const [call, setCall] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = getCookie('token');
+        const result = await api.get(slug, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setFiles(result.data);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          clearCookies(['user', 'token']);
+          router.replace('/login');
+        }
+      }
+    };
+    fetchData();
+  }, [call]);
+
+  const create = async ({ order, createdAt, description }: TodoList) => {
+    const token = getCookie('token');
+    if (slug === '/law') {
+      try {
+        await api.post(
+          slug,
+          {
+            order: Number(order),
+            description,
+            createdAt,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setCall(!call);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          toast({
+            title: error.response?.data.message,
+            variant: 'destructive',
+            action: <ToastAction altText="fechar">fechar</ToastAction>,
+          });
+        }
+      }
+    } else {
+      try {
+        await api.post(
+          slug,
+          {
+            description,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setCall(!call);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          toast({
+            title: error.response?.data.message,
+            variant: 'destructive',
+            action: <ToastAction altText="fechar">fechar</ToastAction>,
+          });
+        }
+      }
+    }
+  };
+
+  const update = async ({ id, order, createdAt, description }: TodoList) => {
+    const token = getCookie('token');
+    if (slug === '/law') {
+      try {
+        await api.put(
+          `${slug}/${id}`,
+          {
+            order: Number(order),
+            description,
+            createdAt,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setCall(!call);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          toast({
+            title: error.response?.data.message,
+            variant: 'destructive',
+            action: <ToastAction altText="fechar">fechar</ToastAction>,
+          });
+        }
+      }
+    } else {
+      try {
+        await api.put(
+          `${slug}/${id}`,
+          {
+            description,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setCall(!call);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          toast({
+            title: error.response?.data.message,
+            variant: 'destructive',
+            action: <ToastAction altText="fechar">fechar</ToastAction>,
+          });
+        }
+      }
+    }
+  };
+
+  const exclude = async ({ id }: TodoList) => {
+    const token = getCookie('token');
+    try {
+      await api.delete(`${slug}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCall(!call);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: error.response?.data.message,
+          variant: 'destructive',
+          action: <ToastAction altText="fechar">fechar</ToastAction>,
+        });
+      }
+    }
+  };
+
   return (
     <table className="border w-full border-green-600 rounded-lg mt-16 ml-48 max-lg:ml-0">
       <thead className="border-b border-green-600">
@@ -43,12 +191,13 @@ export const Dashboard = ({ data, slug }: ApiData) => {
               description="Escreva uma descrição."
               action="Criar"
               data={{ slug }}
+              func={create}
             />
           </th>
         </tr>
       </thead>
       <tbody>
-        {data.map((k) => {
+        {files.map((k) => {
           return (
             <tr
               key={k.id}
@@ -81,6 +230,7 @@ export const Dashboard = ({ data, slug }: ApiData) => {
                       description="Escreva uma descrição."
                       action="Editar"
                       data={{ slug, id: k.id }}
+                      func={update}
                     />
                     <MyDialog
                       myDiv={
@@ -92,6 +242,7 @@ export const Dashboard = ({ data, slug }: ApiData) => {
                       description="Tem certeza que quer fazer isso?"
                       action="Deletar"
                       data={{ slug, id: k.id }}
+                      func={exclude}
                     />
                   </DropdownMenuContent>
                 </DropdownMenu>

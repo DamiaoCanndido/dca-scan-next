@@ -1,5 +1,4 @@
 'use client';
-
 import {
   Dialog,
   DialogContent,
@@ -10,13 +9,8 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import { useRouter } from 'next/navigation';
-import { api } from '@/lib/axios';
 import { useState } from 'react';
-import { AxiosError } from 'axios';
-import { useToast } from '@/components/ui/use-toast';
-import { ToastAction } from '@/components/ui/toast';
-import { getCookie } from 'cookies-next';
+import { TodoList } from '@/entities/api-data';
 
 interface HTMLProps {
   myDiv?: JSX.Element;
@@ -30,13 +24,10 @@ interface HTMLProps {
     order?: string;
     createdAt?: string;
   };
+  func: (todo: TodoList) => void;
 }
 
 export const MyDialog = (props: HTMLProps) => {
-  const router = useRouter();
-
-  const { toast } = useToast();
-
   const [description, setDescription] = useState('');
   const [order, setOrder] = useState('');
   const [createdAt, setCreatedAt] = useState('');
@@ -55,65 +46,6 @@ export const MyDialog = (props: HTMLProps) => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setCreatedAt(event.target.value);
-  };
-
-  const HandleMethod = async () => {
-    const token = getCookie('token');
-    if (props.action === 'Criar' && props.data.slug !== '/law') {
-      try {
-        await api.post(
-          props.data.slug,
-          {
-            description,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: error.response?.data.message,
-            variant: 'destructive',
-            action: <ToastAction altText="fechar">fechar</ToastAction>,
-          });
-        }
-      }
-    } else if (props.action === 'Criar') {
-      try {
-        await api.post(
-          props.data.slug,
-          {
-            order: Number(order),
-            description,
-            createdAt,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: error.response?.data.message,
-            variant: 'destructive',
-            action: <ToastAction altText="fechar">fechar</ToastAction>,
-          });
-        }
-      }
-    } else if (props.action === 'Deletar') {
-      try {
-        await api.delete(`${props.data.slug}/${props.data.id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: error.response?.data.message,
-            variant: 'destructive',
-            action: <ToastAction altText="fechar">fechar</ToastAction>,
-          });
-        }
-      }
-    }
-
-    router.refresh();
   };
 
   return (
@@ -172,7 +104,11 @@ export const MyDialog = (props: HTMLProps) => {
                 : 'bg-green-600 m-2 w-20 h-8 rounded-sm'
             }
           >
-            <div onClick={HandleMethod}>
+            <div
+              onClick={() =>
+                props.func({ description, order, createdAt, id: props.data.id })
+              }
+            >
               <p className="text-white">{props.action}</p>
             </div>
           </DialogClose>
