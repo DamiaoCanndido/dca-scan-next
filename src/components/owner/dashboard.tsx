@@ -80,7 +80,7 @@ export const Dashboard = ({ data, slug }: ApiData) => {
                       title={`Edite ${convertRoutes(slug)} ${k.order}`}
                       description="Escreva uma descrição."
                       action="Editar"
-                      data={{ slug }}
+                      data={{ slug, id: k.id }}
                     />
                     <MyDialog
                       myDiv={
@@ -91,7 +91,7 @@ export const Dashboard = ({ data, slug }: ApiData) => {
                       title={`Deletando ${convertRoutes(slug)} ${k.order}`}
                       description="Tem certeza que quer fazer isso?"
                       action="Deletar"
-                      data={{ slug }}
+                      data={{ slug, id: k.id }}
                     />
                   </DropdownMenuContent>
                 </DropdownMenu>

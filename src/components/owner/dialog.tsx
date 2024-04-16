@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { AxiosError } from 'axios';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
@@ -34,6 +34,7 @@ interface HTMLProps {
 
 export const MyDialog = (props: HTMLProps) => {
   const router = useRouter();
+
   const { toast } = useToast();
 
   const [description, setDescription] = useState('');
@@ -96,7 +97,23 @@ export const MyDialog = (props: HTMLProps) => {
           });
         }
       }
+    } else if (props.action === 'Deletar') {
+      try {
+        await api.delete(`${props.data.slug}/${props.data.id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          toast({
+            title: error.response?.data.message,
+            variant: 'destructive',
+            action: <ToastAction altText="fechar">fechar</ToastAction>,
+          });
+        }
+      }
     }
+
+    router.refresh();
   };
 
   return (
