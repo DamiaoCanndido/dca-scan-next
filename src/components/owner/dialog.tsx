@@ -40,10 +40,6 @@ export const MyDialog = (props: HTMLProps) => {
   const [order, setOrder] = useState('');
   const [createdAt, setCreatedAt] = useState('');
 
-  useEffect(() => {
-    console.log(createdAt + ':00.000Z');
-  }, [createdAt]);
-
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -111,7 +107,7 @@ export const MyDialog = (props: HTMLProps) => {
           <DialogTitle>{props.title}</DialogTitle>
           <DialogDescription>{props.description}</DialogDescription>
         </DialogHeader>
-        {props.data.slug === '/law' ? (
+        {props.data.slug === '/law' && props.action !== 'Deletar' ? (
           <div className="flex py-4">
             <input
               id="order"
@@ -124,16 +120,20 @@ export const MyDialog = (props: HTMLProps) => {
         ) : (
           <></>
         )}
-        <div className="flex py-4">
-          <input
-            id="description"
-            placeholder="descrição"
-            value={description}
-            className="flex w-max"
-            onChange={handleDescriptionChange}
-          />
-        </div>
-        {props.data.slug === '/law' ? (
+        {props.action !== 'Deletar' ? (
+          <div className="flex py-4">
+            <input
+              id="description"
+              placeholder="descrição"
+              value={description}
+              className="flex w-max"
+              onChange={handleDescriptionChange}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
+        {props.data.slug === '/law' && props.action !== 'Deletar' ? (
           <div className="flex py-4">
             <input
               id="data"
@@ -148,10 +148,16 @@ export const MyDialog = (props: HTMLProps) => {
           <></>
         )}
         <DialogFooter>
-          <DialogClose asChild>
-            <button onClick={HandleMethod} type="button">
-              {props.action}
-            </button>
+          <DialogClose
+            className={
+              props.action === 'Deletar'
+                ? 'bg-red-600 m-2 w-20 h-8 rounded-sm'
+                : 'bg-green-600 m-2 w-20 h-8 rounded-sm'
+            }
+          >
+            <div onClick={HandleMethod}>
+              <p className="text-white">{props.action}</p>
+            </div>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

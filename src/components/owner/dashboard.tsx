@@ -1,5 +1,6 @@
 import { LuMoreHorizontal, LuPlus } from 'react-icons/lu';
 import dayjs from 'dayjs';
+import { convertRoutes } from '@/helpers/convert-routes';
 import 'dayjs/locale/pt-br';
 import utc from 'dayjs/plugin/utc';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -76,7 +77,7 @@ export const Dashboard = ({ data, slug }: ApiData) => {
                           Editar
                         </div>
                       }
-                      title="Editar documento"
+                      title={`Edite ${convertRoutes(slug)} ${k.order}`}
                       description="Escreva uma descrição."
                       action="Editar"
                       data={{ slug }}
@@ -87,8 +88,8 @@ export const Dashboard = ({ data, slug }: ApiData) => {
                           Deletar
                         </div>
                       }
-                      title="Deletar documento"
-                      description="Escreva uma descrição."
+                      title={`Deletando ${convertRoutes(slug)} ${k.order}`}
+                      description="Tem certeza que quer fazer isso?"
                       action="Deletar"
                       data={{ slug }}
                     />
