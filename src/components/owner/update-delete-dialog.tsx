@@ -1,22 +1,26 @@
-'use client';
+import { TodoList } from '@/entities/api-data';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useState } from 'react';
-import { TodoList } from '@/entities/api-data';
 
 interface HTMLProps {
   myDiv?: JSX.Element;
   title: string;
   description: string;
-  action: string;
   data: {
     description?: string;
     slug: string;
@@ -24,13 +28,16 @@ interface HTMLProps {
     order?: string;
     createdAt?: string;
   };
-  func: (todo: TodoList) => void;
+  edit: (todo: TodoList) => void;
+  del: (todo: TodoList) => void;
 }
 
-export const MyDialog = (props: HTMLProps) => {
+export const UpdateDeleteDialog = (props: HTMLProps) => {
   const [description, setDescription] = useState('');
   const [order, setOrder] = useState('');
   const [createdAt, setCreatedAt] = useState('');
+
+  const [action, setAction] = useState('');
 
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -50,13 +57,35 @@ export const MyDialog = (props: HTMLProps) => {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>{props.myDiv}</DialogTrigger>
+      <DropdownMenu>
+        <DropdownMenuTrigger>{props.myDiv}</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DialogTrigger asChild>
+            <DropdownMenuItem
+              onClick={() => {
+                setAction('Editar');
+              }}
+            >
+              <span>Editar</span>
+            </DropdownMenuItem>
+          </DialogTrigger>
+          <DialogTrigger asChild>
+            <DropdownMenuItem
+              onClick={() => {
+                setAction('Deletar');
+              }}
+            >
+              <span>Deletar</span>
+            </DropdownMenuItem>
+          </DialogTrigger>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{props.title}</DialogTitle>
           <DialogDescription>{props.description}</DialogDescription>
         </DialogHeader>
-        {props.data.slug === '/law' && props.action !== 'Deletar' ? (
+        {props.data.slug === '/law' && action !== 'Deletar' ? (
           <div className="flex py-4">
             <input
               id="order"
@@ -69,8 +98,8 @@ export const MyDialog = (props: HTMLProps) => {
         ) : (
           <></>
         )}
-        {props.action !== 'Deletar' ? (
-          <div className="flex py-4">
+        {action !== 'Deletar' ? (
+          <div className="flex pb-4">
             <input
               id="description"
               placeholder="descrição"
@@ -82,8 +111,8 @@ export const MyDialog = (props: HTMLProps) => {
         ) : (
           <></>
         )}
-        {props.data.slug === '/law' && props.action !== 'Deletar' ? (
-          <div className="flex py-4">
+        {props.data.slug === '/law' && action !== 'Deletar' ? (
+          <div className="flex pb-4">
             <input
               id="data"
               value={createdAt}
@@ -97,19 +126,21 @@ export const MyDialog = (props: HTMLProps) => {
           <></>
         )}
         <DialogFooter>
-          <DialogClose
-            className={
-              props.action === 'Deletar'
-                ? 'bg-red-600 m-2 w-20 h-8 rounded-sm'
-                : 'bg-green-600 m-2 w-20 h-8 rounded-sm'
-            }
-          >
+          <DialogClose className="bg-green-600 m-2 w-20 h-8 rounded-sm">
             <div
-              onClick={() =>
-                props.func({ description, order, createdAt, id: props.data.id })
+              onClick={
+                action === 'Editar'
+                  ? () =>
+                      props.edit({
+                        description,
+                        order,
+                        createdAt,
+                        id: props.data.id,
+                      })
+                  : () => props.del({ id: props.data.id })
               }
             >
-              <p className="text-white">{props.action}</p>
+              <p className="text-white">{action}</p>
             </div>
           </DialogClose>
         </DialogFooter>

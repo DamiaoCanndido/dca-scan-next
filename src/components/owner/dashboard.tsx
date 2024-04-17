@@ -5,20 +5,16 @@ import 'dayjs/locale/pt-br';
 import utc from 'dayjs/plugin/utc';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { ApiData } from '@/entities/api-data';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
-import { MyDialog } from './dialog';
+import { CreateDialog } from './create-dialog';
 import { api } from '@/lib/axios';
 import { getCookie } from 'cookies-next';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { clearCookies } from '@/helpers/cookies';
+import { UpdateDeleteDialog } from './update-delete-dialog';
 
 dayjs.extend(relativeTime);
 dayjs.locale('pt-br');
@@ -180,14 +176,14 @@ export const Dashboard = ({ slug }: ApiData) => {
           <th className="text-left">Descrição</th>
           <th className="text-left">data</th>
           <th className="text-left">
-            <MyDialog
+            <CreateDialog
               myDiv={
                 <div className="flex items-center justify-center w-20 h-9 bg-green-600 hover:bg-green-300 rounded-md cursor-pointer">
                   <LuPlus color="white" size={20} />
                   <span className="text-white">Add</span>
                 </div>
               }
-              title="Novo documento"
+              title={`Crie ${convertRoutes(slug)}`}
               description="Escreva uma descrição."
               action="Criar"
               data={{ slug }}
@@ -213,39 +209,18 @@ export const Dashboard = ({ slug }: ApiData) => {
               <td>{k.description}</td>
               <td>{dayjs().to(k.createdAt)}</td>
               <td style={{ width: 64 }}>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                <UpdateDeleteDialog
+                  myDiv={
                     <div className="flex items-center justify-center size-9 bg-green-200 hover:bg-green-600 rounded-md">
                       <LuMoreHorizontal color="green" size={20} />
                     </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <MyDialog
-                      myDiv={
-                        <div className="flex hover:bg-green-200 cursor-pointer">
-                          Editar
-                        </div>
-                      }
-                      title={`Edite ${convertRoutes(slug)} ${k.order}`}
-                      description="Escreva uma descrição."
-                      action="Editar"
-                      data={{ slug, id: k.id }}
-                      func={update}
-                    />
-                    <MyDialog
-                      myDiv={
-                        <div className="flex hover:bg-green-200 cursor-pointer">
-                          Deletar
-                        </div>
-                      }
-                      title={`Deletando ${convertRoutes(slug)} ${k.order}`}
-                      description="Tem certeza que quer fazer isso?"
-                      action="Deletar"
-                      data={{ slug, id: k.id }}
-                      func={exclude}
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                  }
+                  data={{ slug, id: k.id }}
+                  edit={update}
+                  del={exclude}
+                  description="Escreva uma descrição."
+                  title={`Crie ${convertRoutes(slug)}`}
+                />
               </td>
             </tr>
           );
