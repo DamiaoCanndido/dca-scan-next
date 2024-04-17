@@ -83,7 +83,11 @@ export const UpdateDeleteDialog = (props: HTMLProps) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{props.title}</DialogTitle>
-          <DialogDescription>{props.description}</DialogDescription>
+          <DialogDescription>
+            {action === 'Deletar'
+              ? 'Você realmente deseja excluir?'
+              : props.description}
+          </DialogDescription>
         </DialogHeader>
         {props.data.slug === '/law' && action !== 'Deletar' ? (
           <div className="flex py-4">
@@ -126,7 +130,13 @@ export const UpdateDeleteDialog = (props: HTMLProps) => {
           <></>
         )}
         <DialogFooter>
-          <DialogClose className="bg-green-600 m-2 w-20 h-8 rounded-sm">
+          <DialogClose
+            className={
+              action === 'Editar'
+                ? 'bg-green-600 m-2 w-20 h-8 rounded-sm'
+                : 'bg-red-600 m-2 w-20 h-8 rounded-sm'
+            }
+          >
             <div
               onClick={
                 action === 'Editar'

@@ -163,96 +163,99 @@ export const Dashboard = ({ slug }: ApiData) => {
   };
 
   return (
-    <table className="border w-full border-green-600 rounded-lg mt-16 ml-48 max-lg:ml-0">
-      <thead className="border-b border-green-600">
-        <tr>
-          <th style={{ width: 64 }} className="text-left pl-2 py-3">
-            <input
-              type="checkbox"
-              className="size-4 rounded border border-green-600"
-            />
-          </th>
-          <th className="text-left self-end">Ordem</th>
-          <th className="text-left">Descrição</th>
-          <th className="text-left">data</th>
-          <th className="text-left">
-            <CreateDialog
-              myDiv={
-                <div className="flex items-center justify-center w-20 h-9 bg-green-600 hover:bg-green-300 rounded-md cursor-pointer">
-                  <LuPlus color="white" size={20} />
-                  <span className="text-white">Add</span>
-                </div>
-              }
-              title={`Crie ${convertRoutes(slug)}`}
-              description="Escreva uma descrição."
-              action="Criar"
-              data={{ slug }}
-              func={create}
-            />
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {files.map((k) => {
-          return (
-            <tr
-              key={k.id}
-              className="border-b border-green-600 hover:bg-green-100"
-            >
-              <td style={{ width: 64 }} className="pl-2 py-2.5">
-                <input
-                  type="checkbox"
-                  className="size-4 rounded border border-green-600"
-                />
-              </td>
-              <td>{k.order}</td>
-              <td>{k.description}</td>
-              <td>{dayjs().to(k.createdAt)}</td>
-              <td style={{ width: 64 }}>
-                <UpdateDeleteDialog
-                  myDiv={
-                    <div className="flex items-center justify-center size-9 bg-green-200 hover:bg-green-600 rounded-md">
-                      <LuMoreHorizontal color="green" size={20} />
-                    </div>
-                  }
-                  data={{ slug, id: k.id }}
-                  edit={update}
-                  del={exclude}
-                  description="Escreva uma descrição."
-                  title={`Crie ${convertRoutes(slug)}`}
-                />
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-      {/* <tfoot>
-        <tr>
-          <td className="pl-2 py-2.5" colSpan={2}>
-            Mostrando 10 de 28 itens
-          </td>
+    <>
+      <table className="border w-full border-green-600 rounded-lg mt-[72px] ml-52 max-lg:ml-4 mr-4">
+        <thead className="border-b border-green-600">
+          <tr>
+            <th className="text-left pl-2 h-16">Ordem</th>
+            <th className="text-left h-16">Descrição</th>
+            <th className="text-left h-16">Data</th>
+            <th className="text-left h-16">
+              <CreateDialog
+                myDiv={
+                  <div className="flex max-lg:hidden items-center justify-center w-20 h-9 bg-green-600 hover:bg-green-300 rounded-md cursor-pointer mr-4">
+                    <LuPlus color="white" size={20} />
+                    <span className="text-white">Add</span>
+                  </div>
+                }
+                title={`Crie ${convertRoutes(slug)}`}
+                description="Escreva uma descrição."
+                action="Criar"
+                data={{ slug }}
+                func={create}
+              />
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {files.map((k) => {
+            return (
+              <tr
+                key={k.id}
+                className="border-b border-green-600 hover:bg-green-100"
+              >
+                <td className="pl-2 h-16 text-2xl font-bold">{k.order}</td>
+                <td>{k.description}</td>
+                <td>{dayjs().to(k.createdAt)}</td>
+                <td style={{ width: 64 }}>
+                  <UpdateDeleteDialog
+                    myDiv={
+                      <div className="flex items-center justify-center size-9 bg-green-200 hover:bg-green-600 rounded-md">
+                        <LuMoreHorizontal color="green" size={20} />
+                      </div>
+                    }
+                    data={{ slug, id: k.id }}
+                    edit={update}
+                    del={exclude}
+                    description="Escreva uma descrição."
+                    title={`${convertRoutes(slug)} ${k.order}`}
+                  />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
 
-          <td className="pr-2 text-right" colSpan={3}>
-            <div className="inline-flex items-center gap-8">
-              <span>Página 1 de 2</span>
-              <div className="flex gap-1">
-                <IconButton>
-                  <LuChevronsLeft color="green" size={20} />
-                </IconButton>
-                <IconButton>
-                  <LuChevronLeft color="green" size={20} />
-                </IconButton>
-                <IconButton>
-                  <LuChevronRight color="green" size={20} />
-                </IconButton>
-                <IconButton>
-                  <LuChevronsRight color="green" size={20} />
-                </IconButton>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tfoot> */}
-    </table>
+        {/* <tfoot>
+    <tr>
+      <td className="pl-2 py-2.5" colSpan={2}>
+        Mostrando 10 de 28 itens
+      </td>
+
+      <td className="pr-2 text-right" colSpan={3}>
+        <div className="inline-flex items-center gap-8">
+          <span>Página 1 de 2</span>
+          <div className="flex gap-1">
+            <IconButton>
+              <LuChevronsLeft color="green" size={20} />
+            </IconButton>
+            <IconButton>
+              <LuChevronLeft color="green" size={20} />
+            </IconButton>
+            <IconButton>
+              <LuChevronRight color="green" size={20} />
+            </IconButton>
+            <IconButton>
+              <LuChevronsRight color="green" size={20} />
+            </IconButton>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tfoot> */}
+      </table>
+      <CreateDialog
+        myDiv={
+          <div className="flex justify-center items-center fixed lg:hidden bottom-4 right-4 bg-green-600 size-16 rounded-full">
+            <LuPlus color="white" size={28} />
+          </div>
+        }
+        title={`Crie ${convertRoutes(slug)}`}
+        description="Escreva uma descrição."
+        action="Criar"
+        data={{ slug }}
+        func={create}
+      />
+    </>
   );
 };
