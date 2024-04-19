@@ -37,10 +37,10 @@ export default function Loading() {
         className="mx-auto mb-4"
         src="/logo.png"
         alt="DCA Scan"
-        width={80}
-        height={80}
+        width={200}
+        height={200}
       />
-      <Progress value={progress} className="w-[33%]" />
+      <Progress value={progress} className="w-[66%]" />
     </div>
   );
 }
