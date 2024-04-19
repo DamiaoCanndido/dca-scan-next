@@ -1,6 +1,9 @@
 'use client';
 import { LuEye, LuEyeOff } from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { useState } from 'react';
 import { api } from '@/lib/axios';
@@ -8,25 +11,38 @@ import { AxiosError } from 'axios';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 import { createCookies } from '@/helpers/cookies';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+
+const formSchema = z.object({
+  email: z
+    .string()
+    .email('Isso não é um e-mail válido')
+    .min(6, { message: 'E-mail deve conter no mínimo 6 caracteres.' })
+    .max(50, { message: 'O e-mail não pode exceder 50 caracteres.' }),
+  password: z
+    .string()
+    .min(6, { message: 'A senha deve conter no mínimo 6 caracteres.' }),
+});
 
 export default function Page() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [typePW, setTypePW] = useState('password');
-  const [showPassword, setShowPassword] = useState(false);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
-  const { toast } = useToast();
-
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-
-  const Login = async () => {
+  async function onSubmit({ email, password }: z.infer<typeof formSchema>) {
     try {
       const res = await api.post('/login', {
         email,
@@ -44,7 +60,13 @@ export default function Page() {
         });
       }
     }
-  };
+  }
+
+  const router = useRouter();
+  const [typePW, setTypePW] = useState('password');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { toast } = useToast();
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -71,52 +93,56 @@ export default function Page() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST">
-          <div className="mt-2">
-            <input
-              id="email"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
               name="email"
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              placeholder="E-mail"
-              autoComplete="email"
-              required
-              className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-dark sm:text-sm sm:leading-6"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>E-mail</FormLabel>
+                  <FormControl>
+                    <Input placeholder="E-mail" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-
-          <div className="relative mt-2">
-            <input
-              id="password"
+            <FormField
+              control={form.control}
               name="password"
-              type={typePW}
-              value={password}
-              onChange={handlePasswordChange}
-              placeholder="Senha"
-              autoComplete="current-password"
-              required
-              className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-dark sm:text-sm sm:leading-6"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        placeholder="Senha"
+                        type={typePW}
+                        {...field}
+                        className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-dark sm:text-sm sm:leading-6"
+                      />
+                      <button
+                        onClick={toggleShowPassword}
+                        type="button"
+                        className="absolute top-1/2 right-3 -translate-y-1/2"
+                      >
+                        {showPassword ? <LuEye /> : <LuEyeOff />}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <button
-              onClick={toggleShowPassword}
-              type="submit"
-              className="absolute top-1/2 right-3 -translate-y-1/2"
-            >
-              {showPassword ? <LuEye /> : <LuEyeOff />}
-            </button>
-          </div>
-
-          <div>
-            <button
-              onClick={Login}
-              type="button"
+            <Button
               className="flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              type="submit"
             >
               Entrar
-            </button>
-          </div>
-        </form>
+            </Button>
+          </form>
+        </Form>
       </div>
     </div>
   );
