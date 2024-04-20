@@ -1,8 +1,8 @@
 'use client';
 import { LuLogOut, LuBookMarked, LuUser2 } from 'react-icons/lu';
 import Link from 'next/link';
-import { deleteCookie, getCookie } from 'cookies-next';
-import { ComponentProps, useEffect } from 'react';
+import { getCookie } from 'cookies-next';
+import { ComponentProps, useEffect, useRef } from 'react';
 import { AuthContextGlobal } from '@/contexts/auth';
 import { clearCookies } from '@/helpers/cookies';
 import { SideBarContextGlobal } from '@/contexts/siderbar';
@@ -13,15 +13,31 @@ interface IconButtonProps extends ComponentProps<'aside'> {
 
 export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
   const { username, setUsername } = AuthContextGlobal();
-  const { setShowSideBar } = SideBarContextGlobal();
+  const { showSideBar, setShowSideBar } = SideBarContextGlobal();
+
+  const sideBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setUsername(getCookie('user')!);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        showSideBar &&
+        sideBarRef.current &&
+        !sideBarRef.current.contains(event.target as Node)
+      ) {
+        setShowSideBar(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   return (
     <>
       <aside
+        ref={sideBarRef}
         {...props}
         className={
           visible
@@ -38,6 +54,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           </div>
           <Link
             href="/decree"
+            replace
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
             onClick={() => {
               setShowSideBar(false);
@@ -48,6 +65,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           </Link>
           <Link
             href="/notice"
+            replace
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
             onClick={() => {
               setShowSideBar(false);
@@ -58,6 +76,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           </Link>
           <Link
             href="/law"
+            replace
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
             onClick={() => {
               setShowSideBar(false);
@@ -68,6 +87,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           </Link>
           <Link
             href="/ordinance"
+            replace
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
             onClick={() => {
               setShowSideBar(false);
@@ -78,7 +98,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           </Link>
           <Link
             href="/login"
-            replace={true}
+            replace
             className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-red-200 items-center text-red-600"
             onClick={() => {
               clearCookies(['user', 'token']);

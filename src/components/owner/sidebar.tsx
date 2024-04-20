@@ -3,7 +3,7 @@ import { SideBarContextGlobal } from '@/contexts/siderbar';
 import { SideBarContent } from './sidebar-content';
 
 export const SideBar = () => {
-  const { showSideBar, setSideBarItem } = SideBarContextGlobal();
+  const { showSideBar } = SideBarContextGlobal();
 
   return (
     <>

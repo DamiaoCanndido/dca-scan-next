@@ -194,8 +194,17 @@ export const Dashboard = ({ slug }: ApiData) => {
                 key={k.id}
                 className="border-b border-green-600 hover:bg-green-100"
               >
-                <td className="pl-2 h-16 text-2xl font-bold">{k.order}</td>
-                <td>{k.description}</td>
+                <td
+                  style={{ width: 80 }}
+                  className="pl-2 h-16 text-2xl font-bold"
+                >
+                  {k.order}
+                </td>
+                <td>
+                  <div className="flex max-w-[200px]">
+                    <span className="truncate">{k.description}</span>
+                  </div>
+                </td>
                 <td>{dayjs(k.createdAt).format('DD/MM/YY hh:mm A')}</td>
                 <td style={{ width: 64 }}>
                   <UpdateDeleteDialog
@@ -252,7 +261,7 @@ export const Dashboard = ({ slug }: ApiData) => {
       </table>
       <CreateDialog
         myDiv={
-          <div className="flex justify-center items-center fixed lg:hidden bottom-4 right-4 bg-green-600 size-16 rounded-full">
+          <div className="flex justify-center items-center fixed lg:hidden bottom-4 left-[50%] -translate-x-1/2 bg-green-600 size-16 rounded-full">
             <LuPlus color="white" size={28} />
           </div>
         }
