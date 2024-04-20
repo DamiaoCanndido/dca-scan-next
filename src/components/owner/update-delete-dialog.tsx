@@ -4,7 +4,6 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -16,6 +15,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useState } from 'react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
 interface HTMLProps {
   myDiv?: JSX.Element;
@@ -33,27 +44,43 @@ interface HTMLProps {
 }
 
 export const UpdateDeleteDialog = (props: HTMLProps) => {
-  const [description, setDescription] = useState('');
-  const [order, setOrder] = useState('');
-  const [createdAt, setCreatedAt] = useState('');
+  const formSchema = z.object({
+    description: z
+      .string()
+      .min(3, { message: 'A descrição deve conter no mínimo 6 caracteres.' })
+      .max(50, { message: 'A descrição não pode exceder 50 caracteres.' }),
+    order:
+      props.data.slug === '/law'
+        ? z.string().min(1, { message: 'A ordem está faltando.' })
+        : z.optional(z.string()),
+    createdAt: z.optional(z.string()),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      description: props.data.description,
+      order: props.data.order,
+      createdAt: '',
+    },
+  });
+
+  async function onSubmit({
+    order,
+    description,
+    createdAt,
+  }: z.infer<typeof formSchema>) {
+    action === 'Editar'
+      ? props.edit({
+          description,
+          order,
+          createdAt,
+          id: props.data.id,
+        })
+      : props.del({ id: props.data.id });
+  }
 
   const [action, setAction] = useState('');
-
-  const handleDescriptionChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setDescription(event.target.value);
-  };
-
-  const handleOrderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOrder(event.target.value);
-  };
-
-  const handleCreatedAtChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setCreatedAt(event.target.value);
-  };
 
   return (
     <Dialog>
@@ -89,71 +116,76 @@ export const UpdateDeleteDialog = (props: HTMLProps) => {
               : props.description}
           </DialogDescription>
         </DialogHeader>
-        {props.data.slug === '/law' && action !== 'Deletar' ? (
-          <div className="flex py-4">
-            <input
-              id="order"
-              value={order}
-              onChange={handleOrderChange}
-              placeholder="ordem"
-              className="flex w-max"
-            />
-          </div>
-        ) : (
-          <></>
-        )}
-        {action !== 'Deletar' ? (
-          <div className="flex pb-4">
-            <input
-              id="description"
-              placeholder="descrição"
-              value={description}
-              className="flex w-max"
-              onChange={handleDescriptionChange}
-            />
-          </div>
-        ) : (
-          <></>
-        )}
-        {props.data.slug === '/law' && action !== 'Deletar' ? (
-          <div className="flex pb-4">
-            <input
-              id="data"
-              value={createdAt}
-              type="datetime-local"
-              placeholder="data"
-              className="flex w-max"
-              onChange={handleCreatedAtChange}
-            />
-          </div>
-        ) : (
-          <></>
-        )}
-        <DialogFooter>
-          <DialogClose
-            className={
-              action === 'Editar'
-                ? 'bg-green-600 m-2 w-20 h-8 rounded-sm'
-                : 'bg-red-600 m-2 w-20 h-8 rounded-sm'
-            }
-          >
-            <div
-              onClick={
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {props.data.slug === '/law' && action !== 'Deletar' ? (
+              <FormField
+                control={form.control}
+                name="order"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>*Ordem (Obrigatório)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ordem" type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : (
+              <></>
+            )}
+            {action !== 'Deletar' ? (
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>*Descrição (Obrigatório)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Descrição" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : (
+              <></>
+            )}
+            {props.data.slug === '/law' && action !== 'Deletar' ? (
+              <FormField
+                control={form.control}
+                name="createdAt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Data</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="datetime-local"
+                        placeholder="Data"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : (
+              <></>
+            )}
+
+            <DialogClose
+              type="submit"
+              className={
                 action === 'Editar'
-                  ? () =>
-                      props.edit({
-                        description,
-                        order,
-                        createdAt,
-                        id: props.data.id,
-                      })
-                  : () => props.del({ id: props.data.id })
+                  ? 'bg-green-600 h-8 rounded-sm w-full'
+                  : 'bg-red-600 h-8 rounded-sm w-full'
               }
             >
               <p className="text-white">{action}</p>
-            </div>
-          </DialogClose>
-        </DialogFooter>
+            </DialogClose>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

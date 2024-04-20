@@ -196,7 +196,7 @@ export const Dashboard = ({ slug }: ApiData) => {
               >
                 <td className="pl-2 h-16 text-2xl font-bold">{k.order}</td>
                 <td>{k.description}</td>
-                <td>{dayjs(k.createdAt).format('DD/MM/YY hh:mm')}</td>
+                <td>{dayjs(k.createdAt).format('DD/MM/YY hh:mm A')}</td>
                 <td style={{ width: 64 }}>
                   <UpdateDeleteDialog
                     myDiv={
@@ -204,7 +204,13 @@ export const Dashboard = ({ slug }: ApiData) => {
                         <LuMoreHorizontal color="green" size={20} />
                       </div>
                     }
-                    data={{ slug, id: k.id }}
+                    data={{
+                      slug,
+                      id: k.id,
+                      order: k.order?.toString(),
+                      description: k.description,
+                      createdAt: k.createdAt,
+                    }}
                     edit={update}
                     del={exclude}
                     description="Escreva uma descrição."
