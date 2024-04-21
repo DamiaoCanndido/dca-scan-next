@@ -167,10 +167,10 @@ export const Dashboard = ({ slug }: ApiData) => {
       <table className="border w-full border-green-600 rounded-lg mt-[72px] ml-52 max-lg:ml-4 mr-4">
         <thead className="border-b border-green-600">
           <tr>
-            <th className="text-left pl-2 h-16">Ordem</th>
-            <th className="text-left h-16">Descrição</th>
-            <th className="text-left h-16">Data</th>
-            <th className="text-left h-16">
+            <th className="text-left pl-2 h-16 tracking-wider">Ordem</th>
+            <th className="text-left h-16 tracking-wider">Descrição</th>
+            <th className="text-left h-16 tracking-wider">Data</th>
+            <th className="text-left h-16 tracking-wider">
               <CreateDialog
                 myDiv={
                   <div className="flex max-lg:hidden items-center justify-center w-20 h-9 bg-green-600 hover:bg-green-300 rounded-md cursor-pointer mr-4">
@@ -202,10 +202,14 @@ export const Dashboard = ({ slug }: ApiData) => {
                 </td>
                 <td>
                   <div className="flex max-w-[200px]">
-                    <span className="truncate">{k.description}</span>
+                    <span className="text-base truncate">{k.description}</span>
                   </div>
                 </td>
-                <td>{dayjs(k.createdAt).format('DD/MM/YY hh:mm A')}</td>
+                <td>
+                  <span className="text-xs">
+                    {dayjs(k.createdAt).format('DD/MM/YY hh:mm A')}
+                  </span>
+                </td>
                 <td style={{ width: 64 }}>
                   <UpdateDeleteDialog
                     myDiv={

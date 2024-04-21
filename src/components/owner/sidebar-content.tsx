@@ -2,7 +2,7 @@
 import { LuLogOut, LuBookMarked, LuUser2 } from 'react-icons/lu';
 import Link from 'next/link';
 import { getCookie } from 'cookies-next';
-import { ComponentProps, useEffect, useRef } from 'react';
+import { ComponentProps, useEffect, useRef, useState } from 'react';
 import { AuthContextGlobal } from '@/contexts/auth';
 import { clearCookies } from '@/helpers/cookies';
 import { SideBarContextGlobal } from '@/contexts/siderbar';
@@ -14,6 +14,8 @@ interface IconButtonProps extends ComponentProps<'aside'> {
 export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
   const { username, setUsername } = AuthContextGlobal();
   const { showSideBar, setShowSideBar } = SideBarContextGlobal();
+
+  const [sideBarTab, setSideBarTab] = useState('');
 
   const sideBarRef = useRef<HTMLDivElement>(null);
 
@@ -41,12 +43,12 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
         {...props}
         className={
           visible
-            ? 'border-r-2 border-green-900 bottom-0 fixed z-10 top-16 text-xs text-green-dark h-screen overflow-y-auto text-center bg-white w-48'
-            : 'border-r-2 border-green-900 bottom-0 fixed z-10 top-16 text-xs text-green-dark h-screen overflow-y-auto text-center bg-white w-48 max-lg:hidden'
+            ? 'border-r bg-green-50 border-gray-200 bottom-0 fixed z-10 top-16 text-xs text-green-900 h-screen overflow-y-auto text-center w-48'
+            : 'border-r bg-green-50 border-gray-200 bottom-0 fixed z-10 top-16 text-xs text-green-900 h-screen overflow-y-auto text-center w-48 max-lg:hidden'
         }
       >
         <div className="h-full overflow-y-auto">
-          <div className="flex flex-col justify-center items-center cursor-pointer text-white bg-green-800 p-2 h-28">
+          <div className="flex border-b border-green-600 flex-col justify-center items-center cursor-pointer text-green-900 bg-green-50 p-2 h-28">
             <div className="align-center self-center pr-2">
               <LuUser2 size={30} />
             </div>
@@ -55,9 +57,14 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           <Link
             href="/decree"
             replace
-            className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
+            className={
+              sideBarTab === 'decree'
+                ? 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center bg-green-300'
+                : 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center'
+            }
             onClick={() => {
               setShowSideBar(false);
+              setSideBarTab('decree');
             }}
           >
             <LuBookMarked size={30} />
@@ -66,9 +73,14 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           <Link
             href="/notice"
             replace
-            className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
+            className={
+              sideBarTab === 'notice'
+                ? 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center bg-green-300'
+                : 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center'
+            }
             onClick={() => {
               setShowSideBar(false);
+              setSideBarTab('notice');
             }}
           >
             <LuBookMarked size={30} />
@@ -77,9 +89,14 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           <Link
             href="/law"
             replace
-            className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
+            className={
+              sideBarTab === 'law'
+                ? 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center bg-green-300'
+                : 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center'
+            }
             onClick={() => {
               setShowSideBar(false);
+              setSideBarTab('law');
             }}
           >
             <LuBookMarked size={30} />
@@ -88,9 +105,14 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           <Link
             href="/ordinance"
             replace
-            className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-green-200 items-center"
+            className={
+              sideBarTab === 'ordinance'
+                ? 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center bg-green-300'
+                : 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center'
+            }
             onClick={() => {
               setShowSideBar(false);
+              setSideBarTab('ordinance');
             }}
           >
             <LuBookMarked size={30} />
@@ -99,7 +121,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           <Link
             href="/login"
             replace
-            className="flex cursor-pointer border-b-2 border-green-900 pr-8 py-2 hover:bg-red-200 items-center text-red-600"
+            className="flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-red-200 items-center text-red-600"
             onClick={() => {
               clearCookies(['user', 'token']);
             }}
