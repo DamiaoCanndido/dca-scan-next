@@ -164,13 +164,17 @@ export const Dashboard = ({ slug }: ApiData) => {
 
   return (
     <>
-      <table className="border w-full border-green-600 rounded-lg mt-[72px] ml-52 max-lg:ml-4 mr-4">
+      <table className="table-auto border w-full border-green-600 rounded-lg mt-[72px] ml-52 max-lg:ml-4 mr-4">
         <thead className="border-b border-green-600">
           <tr>
-            <th className="text-left pl-2 h-16 tracking-wider">Ordem</th>
-            <th className="text-left h-16 tracking-wider">Descrição</th>
-            <th className="text-left h-16 tracking-wider">Data</th>
-            <th className="text-left h-16 tracking-wider">
+            <th className="text-left pl-2 h-16 tracking-wider w-[12.5%]">
+              Ordem
+            </th>
+            <th className="text-left h-16 tracking-wider w-[40.5%]">
+              Descrição
+            </th>
+            <th className="text-left h-16 tracking-wider w-[40.5%]">Data</th>
+            <th className="text-left h-16 tracking-wider w-[6.5%]">
               <CreateDialog
                 myDiv={
                   <div className="flex max-lg:hidden items-center justify-center w-20 h-9 bg-green-600 hover:bg-green-300 rounded-md cursor-pointer mr-2">
@@ -194,15 +198,12 @@ export const Dashboard = ({ slug }: ApiData) => {
                 key={k.id}
                 className="border-b border-green-600 hover:bg-green-100"
               >
-                <td
-                  style={{ width: 80 }}
-                  className="pl-2 h-16 text-2xl font-bold"
-                >
-                  {k.order}
-                </td>
+                <td className="pl-1 h-16 text-2xl font-bold">{k.order}</td>
                 <td>
-                  <div className="flex max-w-[200px]">
-                    <span className="text-base truncate">{k.description}</span>
+                  <div className="flex max-w-full">
+                    <span className="text-xs line-clamp-3 lg:text-base">
+                      {k.description}
+                    </span>
                   </div>
                 </td>
                 <td>
@@ -210,7 +211,7 @@ export const Dashboard = ({ slug }: ApiData) => {
                     {dayjs(k.createdAt).format('DD/MM/YY hh:mm A')}
                   </span>
                 </td>
-                <td style={{ width: 64 }}>
+                <td className="pr-1">
                   <UpdateDeleteDialog
                     myDiv={
                       <div className="flex items-center justify-center size-9 bg-green-200 hover:bg-green-600 rounded-md">
