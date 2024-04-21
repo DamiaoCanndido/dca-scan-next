@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { clearCookies } from '@/helpers/cookies';
 import { UpdateDeleteDialog } from '@/components/owner/update-delete-dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 
 dayjs.extend(relativeTime);
 dayjs.locale('pt-br');
@@ -33,6 +34,7 @@ export const Dashboard = ({ slug }: ApiData) => {
 
   const [files, setFiles] = useState<ApiData[]>([]);
   const [call, setCall] = useState(false);
+  const [isLoading, setIsloading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +46,7 @@ export const Dashboard = ({ slug }: ApiData) => {
           },
         });
         setFiles(result.data);
+        setIsloading(false);
       } catch (error) {
         if (error instanceof AxiosError) {
           clearCookies(['user', 'token']);
@@ -162,7 +165,13 @@ export const Dashboard = ({ slug }: ApiData) => {
     }
   };
 
-  return (
+  return isLoading ? (
+    <div className="w-full mt-[72px] ml-52 max-lg:ml-4 mr-4">
+      {Array.from({ length: 15 }).map((_, i) => {
+        return <Skeleton key={i} className="h-16 mb-2" />;
+      })}
+    </div>
+  ) : (
     <>
       <table className="table-auto border w-full border-green-600 rounded-lg mt-[72px] ml-52 max-lg:ml-4 mr-4">
         <thead className="border-b border-green-600">
