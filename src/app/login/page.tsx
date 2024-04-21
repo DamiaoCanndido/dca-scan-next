@@ -25,6 +25,7 @@ import { Input } from '@/components/ui/input';
 const formSchema = z.object({
   email: z
     .string()
+    .trim()
     .email('Isso não é um e-mail válido')
     .min(6, { message: 'E-mail deve conter no mínimo 6 caracteres.' })
     .max(50, { message: 'O e-mail não pode exceder 50 caracteres.' }),
@@ -45,7 +46,7 @@ export default function Page() {
   async function onSubmit({ email, password }: z.infer<typeof formSchema>) {
     try {
       const res = await api.post('/login', {
-        email,
+        email: email.trim(),
         password,
       });
       createCookies('user', res.data.username);

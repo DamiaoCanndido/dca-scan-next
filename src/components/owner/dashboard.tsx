@@ -173,7 +173,7 @@ export const Dashboard = ({ slug }: ApiData) => {
             <th className="text-left h-16 tracking-wider">
               <CreateDialog
                 myDiv={
-                  <div className="flex max-lg:hidden items-center justify-center w-20 h-9 bg-green-600 hover:bg-green-300 rounded-md cursor-pointer mr-4">
+                  <div className="flex max-lg:hidden items-center justify-center w-20 h-9 bg-green-600 hover:bg-green-300 rounded-md cursor-pointer mr-2">
                     <LuPlus color="white" size={20} />
                     <span className="text-white">Add</span>
                   </div>

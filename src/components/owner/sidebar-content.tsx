@@ -124,6 +124,7 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             className="flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-red-200 items-center text-red-600"
             onClick={() => {
               clearCookies(['user', 'token']);
+              setSideBarTab('');
             }}
           >
             <LuLogOut size={30} />
