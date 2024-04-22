@@ -172,8 +172,13 @@ export const Dashboard = ({ slug }: ApiData) => {
       })}
     </div>
   ) : (
-    <>
-      <table className="table-auto border w-full border-green-600 rounded-lg mt-[72px] ml-52 max-lg:ml-4 mr-4">
+    <div className="w-full border rounded-lg ml-52 max-lg:ml-4 mr-4 border-green-600 mt-[72px]">
+      <div className="flex items-center w-full rounded-lg h-16 bg-green-100">
+        <h2 className="ml-4 font-bold">{`${convertRoutes(
+          slug
+        ).toUpperCase()} ATUAL: ${files[0].order}`}</h2>
+      </div>
+      <table className="w-full">
         <thead className="border-b border-green-600">
           <tr>
             <th className="text-left pl-2 h-16 tracking-wider w-[12.5%]">
@@ -205,7 +210,7 @@ export const Dashboard = ({ slug }: ApiData) => {
             return (
               <tr
                 key={k.id}
-                className="border-b border-green-600 hover:bg-green-100"
+                className="border-t border-green-600 hover:bg-green-100"
               >
                 <td className="pl-1 h-16 text-2xl font-bold">{k.order}</td>
                 <td>
@@ -285,6 +290,6 @@ export const Dashboard = ({ slug }: ApiData) => {
         data={{ slug }}
         func={create}
       />
-    </>
+    </div>
   );
 };
