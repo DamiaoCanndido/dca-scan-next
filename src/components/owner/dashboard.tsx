@@ -174,9 +174,11 @@ export const Dashboard = ({ slug }: ApiData) => {
   ) : (
     <div className="w-full border rounded-lg ml-52 max-lg:ml-4 mr-4 border-green-600 mt-[72px]">
       <div className="flex items-center w-full rounded-lg h-16 bg-green-100">
-        <h2 className="ml-4 font-bold">{`${convertRoutes(
-          slug
-        ).toUpperCase()} ATUAL: ${files[0].order}`}</h2>
+        <h2 className="ml-4 font-bold">
+          {files[0]
+            ? `${convertRoutes(slug).toUpperCase()} ATUAL: ${files[0].order}`
+            : `NÃO EXISTE ${convertRoutes(slug).toUpperCase()}S`}
+        </h2>
       </div>
       <table className="w-full">
         <thead className="border-b border-green-600">
