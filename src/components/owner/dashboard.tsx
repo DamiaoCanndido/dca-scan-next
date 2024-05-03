@@ -104,45 +104,25 @@ export const Dashboard = ({ slug }: ApiData) => {
 
   const update = async ({ id, order, createdAt, description }: TodoList) => {
     const token = getCookie('token');
-    if (slug === '/law') {
-      try {
-        await api.put(
-          `${slug}/${id}`,
-          {
-            order: Number(order),
-            description,
-            createdAt,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setCall(!call);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: error.response?.data.message,
-            variant: 'destructive',
-            action: <ToastAction altText="fechar">fechar</ToastAction>,
-          });
-        }
-      }
-    } else {
-      try {
-        await api.put(
-          `${slug}/${id}`,
-          {
-            description,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setCall(!call);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: error.response?.data.message,
-            variant: 'destructive',
-            action: <ToastAction altText="fechar">fechar</ToastAction>,
-          });
-        }
+
+    try {
+      await api.put(
+        `${slug}/${id}`,
+        {
+          order: Number(order),
+          description,
+          createdAt,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setCall(!call);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: error.response?.data.message,
+          variant: 'destructive',
+          action: <ToastAction altText="fechar">fechar</ToastAction>,
+        });
       }
     }
   };

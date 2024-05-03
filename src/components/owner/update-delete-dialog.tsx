@@ -118,7 +118,7 @@ export const UpdateDeleteDialog = (props: HTMLProps) => {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {props.data.slug === '/law' && action !== 'Deletar' ? (
+            {action !== 'Deletar' ? (
               <FormField
                 control={form.control}
                 name="order"
@@ -152,7 +152,7 @@ export const UpdateDeleteDialog = (props: HTMLProps) => {
             ) : (
               <></>
             )}
-            {props.data.slug === '/law' && action !== 'Deletar' ? (
+            {action !== 'Deletar' ? (
               <FormField
                 control={form.control}
                 name="createdAt"
