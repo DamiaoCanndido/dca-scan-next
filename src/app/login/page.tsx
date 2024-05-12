@@ -1,5 +1,7 @@
 'use client';
 import { LuEye, LuEyeOff } from 'react-icons/lu';
+import { IoLogoWhatsapp, IoLogoGithub } from 'react-icons/io';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -80,6 +82,24 @@ export default function Page() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <Link
+        href="https://wa.me/5583996155351"
+        target="blank"
+        rel="noopener noreferrer"
+        className="absolute flex items-center rounded bottom-2 left-2 bg-slate-200 h-8 w-auto"
+      >
+        <IoLogoWhatsapp color="green" size={30} />
+        <p className="mx-1 text-sm font-bold">Desenvolvedor</p>
+      </Link>
+      <Link
+        href="https://github.com/DamiaoCanndido/dca-scan-next"
+        target="blank"
+        rel="noopener noreferrer"
+        className="absolute flex items-center rounded bottom-2 right-2 bg-slate-200 h-8 w-auto"
+      >
+        <IoLogoGithub color="black" size={30} />
+        <p className="mx-1 text-sm font-bold">Projeto</p>
+      </Link>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <Image
           className="mx-auto"
@@ -101,7 +121,7 @@ export default function Page() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>E-mail</FormLabel>
+                  <FormLabel id="email">E-mail</FormLabel>
                   <FormControl>
                     <Input placeholder="E-mail" {...field} />
                   </FormControl>
@@ -114,7 +134,7 @@ export default function Page() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Senha</FormLabel>
+                  <FormLabel id="password">Senha</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
