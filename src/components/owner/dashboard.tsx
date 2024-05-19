@@ -16,6 +16,15 @@ import { useEffect, useState } from 'react';
 import { clearCookies } from '@/helpers/cookies';
 import { UpdateDeleteDialog } from '@/components/owner/update-delete-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 dayjs.extend(relativeTime);
 dayjs.locale('pt-br');
@@ -36,11 +45,30 @@ export const Dashboard = ({ slug }: ApiData) => {
   const [call, setCall] = useState(false);
   const [isLoading, setIsloading] = useState(true);
 
+  const [years, setYears] = useState<number[]>([]);
+  const [year, setYear] = useState(years[0]);
+
   useEffect(() => {
+    const token = getCookie('token');
+
+    const getYears = async () => {
+      try {
+        const result = await api.get(`${slug}/years`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setYears(result.data.years);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          clearCookies(['user', 'token']);
+          router.replace('/login');
+        }
+      }
+    };
     const fetchData = async () => {
       try {
-        const token = getCookie('token');
-        const result = await api.get(slug, {
+        const result = await api.get(`${slug}?year=${year}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -54,6 +82,8 @@ export const Dashboard = ({ slug }: ApiData) => {
         }
       }
     };
+
+    getYears();
     fetchData();
   }, [call]);
 
@@ -153,7 +183,29 @@ export const Dashboard = ({ slug }: ApiData) => {
     </div>
   ) : (
     <div className="w-full border rounded-lg ml-52 max-lg:ml-4 mr-4 border-green-600 mt-[72px]">
-      <div className="flex items-center w-full rounded-lg h-16 bg-green-100">
+      <div className="flex items-center w-full rounded-t-lg h-16 bg-green-100">
+        <p className="px-2 font-bold">ANO:</p>
+        <Select
+          onValueChange={(e) => {
+            setYear(Number(e));
+            setCall(!call);
+          }}
+          defaultValue={years.length > 0 ? years[0].toString() : ''}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Escolha um ano" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Anos</SelectLabel>
+              {years.map((e) => {
+                return <SelectItem value={e.toString()}>{e}</SelectItem>;
+              })}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex items-center w-full rounded-b-lg h-16 bg-green-100">
         <h2 className="ml-4 font-bold">
           {files[0]
             ? `${convertRoutes(slug).toUpperCase()} ATUAL: ${files[0].order}`
