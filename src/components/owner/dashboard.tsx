@@ -1,4 +1,11 @@
-import { LuMoreHorizontal, LuPlus } from 'react-icons/lu';
+import {
+  LuChevronLeft,
+  LuChevronRight,
+  LuChevronsLeft,
+  LuChevronsRight,
+  LuMoreHorizontal,
+  LuPlus,
+} from 'react-icons/lu';
 import dayjs from 'dayjs';
 import { convertRoutes } from '@/helpers/convert-routes';
 import 'dayjs/locale/pt-br';
@@ -25,6 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { IconButton } from './icon-button';
 
 dayjs.extend(relativeTime);
 dayjs.locale('pt-br');
@@ -47,6 +55,30 @@ export const Dashboard = ({ slug }: ApiData) => {
 
   const [years, setYears] = useState<number[]>([]);
   const [year, setYear] = useState(years[0]);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+
+  const totalPages = Math.ceil(count / 10);
+
+  const firstPage = () => {
+    setPage(1);
+  };
+
+  const previousPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
+
+  const lastPage = () => {
+    setPage(totalPages);
+  };
 
   useEffect(() => {
     const token = getCookie('token');
@@ -68,12 +100,13 @@ export const Dashboard = ({ slug }: ApiData) => {
     };
     const fetchData = async () => {
       try {
-        const result = await api.get(`${slug}?year=${year}`, {
+        const result = await api.get(`${slug}?year=${year}&p=${page}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setFiles(result.data);
+        setFiles(result.data.docs);
+        setCount(result.data.count);
         setIsloading(false);
       } catch (error) {
         if (error instanceof AxiosError) {
@@ -85,7 +118,7 @@ export const Dashboard = ({ slug }: ApiData) => {
 
     getYears();
     fetchData();
-  }, [call]);
+  }, [call, page]);
 
   const create = async ({ order, createdAt, description }: TodoList) => {
     const token = getCookie('token');
@@ -240,7 +273,7 @@ export const Dashboard = ({ slug }: ApiData) => {
           </tr>
         </thead>
         <tbody>
-          {files.map((k) => {
+          {files.map((k, i) => {
             return (
               <tr
                 key={k.id}
@@ -284,33 +317,57 @@ export const Dashboard = ({ slug }: ApiData) => {
           })}
         </tbody>
 
-        {/* <tfoot>
-    <tr>
-      <td className="pl-2 py-2.5" colSpan={2}>
-        Mostrando 10 de 28 itens
-      </td>
+        <tfoot>
+          <tr>
+            <td className="max-lg:hidden pl-2 py-2.5" colSpan={2}>
+              {`Mostrando ${
+                count === 0
+                  ? 0
+                  : count < 10 || totalPages === page
+                  ? count
+                  : 10 * page
+              } de ${count} itens`}
+            </td>
 
-      <td className="pr-2 text-right" colSpan={3}>
-        <div className="inline-flex items-center gap-8">
-          <span>Página 1 de 2</span>
-          <div className="flex gap-1">
-            <IconButton>
-              <LuChevronsLeft color="green" size={20} />
-            </IconButton>
-            <IconButton>
-              <LuChevronLeft color="green" size={20} />
-            </IconButton>
-            <IconButton>
-              <LuChevronRight color="green" size={20} />
-            </IconButton>
-            <IconButton>
-              <LuChevronsRight color="green" size={20} />
-            </IconButton>
-          </div>
-        </div>
-      </td>
-    </tr>
-  </tfoot> */}
+            <td className="lg:hidden pl-2 py-2.5" colSpan={2}>
+              {`${
+                count === 0
+                  ? 0
+                  : count < 10 || totalPages === page
+                  ? count
+                  : 10 * page
+              }/${count}`}
+            </td>
+
+            <td className="pr-2 text-right" colSpan={3}>
+              <div className="inline-flex items-center gap-8">
+                <span className="max-lg:hidden">{`Mostrando página ${
+                  count === 0 ? 0 : page
+                } de ${totalPages}`}</span>
+                <div className="flex gap-1">
+                  <IconButton onClick={firstPage} disabled={page === 1}>
+                    <LuChevronsLeft color="green" size={20} />
+                  </IconButton>
+                  <IconButton onClick={previousPage} disabled={page === 1}>
+                    <LuChevronLeft color="green" size={20} />
+                  </IconButton>
+                  <IconButton
+                    onClick={nextPage}
+                    disabled={page === totalPages || totalPages === 0}
+                  >
+                    <LuChevronRight color="green" size={20} />
+                  </IconButton>
+                  <IconButton
+                    onClick={lastPage}
+                    disabled={page === totalPages || totalPages === 0}
+                  >
+                    <LuChevronsRight color="green" size={20} />
+                  </IconButton>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
       </table>
       <CreateDialog
         myDiv={
