@@ -221,6 +221,7 @@ export const Dashboard = ({ slug }: ApiData) => {
         <Select
           onValueChange={(e) => {
             setYear(Number(e));
+            setPage(1);
             setCall(!call);
           }}
           defaultValue={years.length > 0 ? years[0].toString() : ''}
