@@ -61,7 +61,7 @@ export const UpdateDeleteDialog = (props: HTMLProps) => {
     defaultValues: {
       description: props.data.description,
       order: props.data.order,
-      createdAt: '',
+      createdAt: props.data.createdAt!.slice(0, 16),
     },
   });
 

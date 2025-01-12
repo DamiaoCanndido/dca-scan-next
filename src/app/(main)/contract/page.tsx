@@ -8,10 +8,8 @@ import {
   LuPlus,
 } from 'react-icons/lu';
 import dayjs from 'dayjs';
-import { convertContract, convertRoutes } from '@/helpers/convert-routes';
-import 'dayjs/locale/pt-br';
 import utc from 'dayjs/plugin/utc';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import { convertContract, convertRoutes } from '@/helpers/convert-routes';
 import { ContractList } from '@/entities/api-data';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
@@ -36,8 +34,6 @@ import { IconButton } from '@/components/owner/icon-button';
 import { CreateContractDialog } from '@/components/owner/create-contract-dialog';
 import { UpdateDeleteContractDialog } from '@/components/owner/update-delete-contract-dialog';
 
-dayjs.extend(relativeTime);
-dayjs.locale('pt-br');
 dayjs.extend(utc);
 
 const contractType = ['bidding', 'publicinterest'];
@@ -327,7 +323,7 @@ export default function Page() {
                 </td>
                 <td>
                   <span className="text-xs">
-                    {dayjs(k.startsIn).format('DD/MM/YY hh:mm A')}
+                    {dayjs(k.startsIn).utc().format('DD/MM/YY hh:mm A')}
                   </span>
                 </td>
                 <td>

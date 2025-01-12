@@ -6,11 +6,9 @@ import {
   LuMoreHorizontal,
   LuPlus,
 } from 'react-icons/lu';
-import dayjs from 'dayjs';
 import { convertRoutes } from '@/helpers/convert-routes';
-import 'dayjs/locale/pt-br';
+import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import { ApiData } from '@/entities/api-data';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
@@ -34,8 +32,6 @@ import {
 } from '@/components/ui/select';
 import { IconButton } from './icon-button';
 
-dayjs.extend(relativeTime);
-dayjs.locale('pt-br');
 dayjs.extend(utc);
 
 interface TodoList {
@@ -294,7 +290,7 @@ export const Dashboard = ({ slug }: ApiData) => {
                 </td>
                 <td>
                   <span className="text-xs">
-                    {dayjs(k.createdAt).format('DD/MM/YY hh:mm A')}
+                    {dayjs(k.createdAt).utc().format('DD/MM/YY hh:mm A')}
                   </span>
                 </td>
                 <td className="pr-1">
