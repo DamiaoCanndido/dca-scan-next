@@ -24,7 +24,7 @@ export default function Loading() {
     };
     const timer = setTimeout(increaseProgress, 100);
     if (token && progress === 100) {
-      router.replace('/decree');
+      router.replace('/contract');
     } else if (!token && progress === 100) {
       router.replace('/login');
     }

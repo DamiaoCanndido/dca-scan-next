@@ -55,6 +55,22 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             <p>{username}</p>
           </div>
           <Link
+            href="/contract"
+            replace
+            className={
+              sideBarTab === 'contract'
+                ? 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center bg-green-300'
+                : 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center'
+            }
+            onClick={() => {
+              setShowSideBar(false);
+              setSideBarTab('contract');
+            }}
+          >
+            <LuBookMarked size={30} />
+            <span className="px-1 text-sm">Contratos</span>
+          </Link>
+          <Link
             href="/decree"
             replace
             className={
@@ -71,22 +87,6 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
             <span className="px-1 text-sm">Decretos</span>
           </Link>
           <Link
-            href="/notice"
-            replace
-            className={
-              sideBarTab === 'notice'
-                ? 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center bg-green-300'
-                : 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center'
-            }
-            onClick={() => {
-              setShowSideBar(false);
-              setSideBarTab('notice');
-            }}
-          >
-            <LuBookMarked size={30} />
-            <span className="px-1 text-sm">Ofícios</span>
-          </Link>
-          <Link
             href="/law"
             replace
             className={
@@ -101,6 +101,22 @@ export const SideBarContent = ({ visible, ...props }: IconButtonProps) => {
           >
             <LuBookMarked size={30} />
             <span className="px-1 text-sm">Leis</span>
+          </Link>
+          <Link
+            href="/notice"
+            replace
+            className={
+              sideBarTab === 'notice'
+                ? 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center bg-green-300'
+                : 'flex cursor-pointer border-b border-grey-200 pr-8 py-2 hover:bg-green-100 items-center'
+            }
+            onClick={() => {
+              setShowSideBar(false);
+              setSideBarTab('notice');
+            }}
+          >
+            <LuBookMarked size={30} />
+            <span className="px-1 text-sm">Ofícios</span>
           </Link>
           <Link
             href="/ordinance"

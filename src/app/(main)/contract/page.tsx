@@ -1,3 +1,4 @@
+'use client';
 import {
   LuChevronLeft,
   LuChevronRight,
@@ -7,21 +8,20 @@ import {
   LuPlus,
 } from 'react-icons/lu';
 import dayjs from 'dayjs';
-import { convertRoutes } from '@/helpers/convert-routes';
+import { convertContract, convertRoutes } from '@/helpers/convert-routes';
 import 'dayjs/locale/pt-br';
 import utc from 'dayjs/plugin/utc';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { ApiData } from '@/entities/api-data';
+import { ContractList } from '@/entities/api-data';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
-import { CreateDialog } from './create-dialog';
+import { CreateDialog } from '@/components/owner/create-dialog';
 import { api } from '@/lib/axios';
 import { getCookie } from 'cookies-next';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { clearCookies } from '@/helpers/cookies';
-import { UpdateDeleteDialog } from '@/components/owner/update-delete-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Select,
@@ -32,28 +32,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { IconButton } from './icon-button';
+import { IconButton } from '@/components/owner/icon-button';
+import { CreateContractDialog } from '@/components/owner/create-contract-dialog';
+import { UpdateDeleteContractDialog } from '@/components/owner/update-delete-contract-dialog';
 
 dayjs.extend(relativeTime);
 dayjs.locale('pt-br');
 dayjs.extend(utc);
 
-interface TodoList {
-  id?: string;
-  description?: string;
-  order?: string;
-  createdAt?: string;
-}
+const contractType = ['bidding', 'publicinterest'];
 
-export const Dashboard = ({ slug }: ApiData) => {
+export default function Page() {
   const { toast } = useToast();
   const router = useRouter();
 
-  const [files, setFiles] = useState<ApiData[]>([]);
+  const [files, setFiles] = useState<ContractList[]>([]);
   const [call, setCall] = useState(false);
   const [isLoading, setIsloading] = useState(true);
 
   const [years, setYears] = useState<number[]>([]);
+  const [type, setType] = useState<string>(contractType[0]);
   const [year, setYear] = useState(years[0]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
@@ -85,7 +83,7 @@ export const Dashboard = ({ slug }: ApiData) => {
 
     const getYears = async () => {
       try {
-        const result = await api.get(`${slug}/years`, {
+        const result = await api.get('contract/years', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -100,11 +98,14 @@ export const Dashboard = ({ slug }: ApiData) => {
     };
     const fetchData = async () => {
       try {
-        const result = await api.get(`${slug}?year=${year}&p=${page}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const result = await api.get(
+          `contract?year=${year}&p=${page}&type=${type}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setFiles(result.data.docs);
         setCount(result.data.count);
         setIsloading(false);
@@ -120,61 +121,62 @@ export const Dashboard = ({ slug }: ApiData) => {
     fetchData();
   }, [call, page]);
 
-  const create = async ({ order, createdAt, description }: TodoList) => {
+  const create = async ({
+    order,
+    duration,
+    hired,
+    startsIn,
+    type,
+    value,
+  }: ContractList) => {
     const token = getCookie('token');
-    if (slug === '/law') {
-      try {
-        await api.post(
-          slug,
-          {
-            order: Number(order),
-            description,
-            createdAt,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setCall(!call);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: error.response?.data.message,
-            variant: 'destructive',
-            action: <ToastAction altText="fechar">fechar</ToastAction>,
-          });
-        }
-      }
-    } else {
-      try {
-        await api.post(
-          slug,
-          {
-            description,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setCall(!call);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: error.response?.data.message,
-            variant: 'destructive',
-            action: <ToastAction altText="fechar">fechar</ToastAction>,
-          });
-        }
+    try {
+      await api.post(
+        '/contract',
+        {
+          order: Number(order),
+          duration: Number(duration),
+          hired,
+          startsIn: startsIn + ':00.000Z',
+          type,
+          value: Number(value),
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setCall(!call);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        toast({
+          title: error.response?.data.message,
+          variant: 'destructive',
+          action: <ToastAction altText="fechar">fechar</ToastAction>,
+        });
       }
     }
   };
 
-  const update = async ({ id, order, createdAt, description }: TodoList) => {
+  const update = async ({
+    id,
+    order,
+    duration,
+    hired,
+    startsIn,
+    value,
+    type,
+  }: ContractList) => {
     const token = getCookie('token');
 
     try {
       await api.put(
-        `${slug}/${id}`,
+        `/contract/${id}`,
         {
           order: Number(order),
-          description,
-          createdAt,
+          duration: Number(duration),
+          hired,
+          startsIn: startsIn + ':00.000Z',
+          type,
+          value: Number(value),
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -190,10 +192,10 @@ export const Dashboard = ({ slug }: ApiData) => {
     }
   };
 
-  const exclude = async ({ id }: TodoList) => {
+  const exclude = async ({ id }: ContractList) => {
     const token = getCookie('token');
     try {
-      await api.delete(`${slug}/${id}`, {
+      await api.delete(`/contract/${id!}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCall(!call);
@@ -216,7 +218,7 @@ export const Dashboard = ({ slug }: ApiData) => {
     </div>
   ) : (
     <div className="w-full border rounded-lg ml-52 max-lg:ml-4 mr-4 border-green-600 mt-[72px]">
-      <div className="flex items-center w-full rounded-t-lg h-16 bg-green-100">
+      <div className="lg:flex lg:h-16 items-center w-full rounded-t-lg bg-green-100">
         <p className="px-2 font-bold">ANO:</p>
         <Select
           onValueChange={(e) => {
@@ -242,36 +244,67 @@ export const Dashboard = ({ slug }: ApiData) => {
             </SelectGroup>
           </SelectContent>
         </Select>
+        <p className="px-2 font-bold">TIPO:</p>
+        <Select
+          onValueChange={(e) => {
+            setType(String(e));
+            setPage(1);
+            setCall(!call);
+          }}
+          defaultValue={type}
+        >
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Escolha um tipo" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Tipo</SelectLabel>
+              {contractType.map((e) => {
+                return (
+                  <SelectItem key={e} value={e.toString()}>
+                    {convertContract(e)}
+                  </SelectItem>
+                );
+              })}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex items-center w-full rounded-b-lg h-16 bg-green-100">
         <h2 className="ml-4 font-bold">
           {files[0]
-            ? `${convertRoutes(slug).toUpperCase()} ATUAL: ${files[0].order}`
-            : `NÃO EXISTE ${convertRoutes(slug).toUpperCase()}S`}
+            ? `${convertRoutes('/contract').toUpperCase()} DE ${convertContract(
+                type
+              )} ATUAL: ${files[0].order}`
+            : `NÃO EXISTE ${convertRoutes(
+                '/contract'
+              ).toUpperCase()}S DE ${convertContract(type)}`}
         </h2>
       </div>
       <table className="w-full">
         <thead className="border-b border-green-600">
           <tr>
-            <th className="text-left pl-2 h-16 tracking-wider w-[12.5%]">
+            <th className="text-left pl-2 h-16 tracking-wider w-[10%]">
               Ordem
             </th>
-            <th className="text-left h-16 tracking-wider w-[40.5%]">
-              Descrição
+            <th className="text-left h-16 tracking-wider w-[20%]">
+              Contratado
             </th>
-            <th className="text-left h-16 tracking-wider w-[40.5%]">Data</th>
-            <th className="text-left h-16 tracking-wider w-[6.5%]">
-              <CreateDialog
+            <th className="text-left h-16 tracking-wider w-[20%]">Início</th>
+            <th className="text-left h-16 tracking-wider w-[20%]">Duração</th>
+            <th className="text-left h-16 tracking-wider w-[20%]">Valor</th>
+            <th className="text-left h-16 tracking-wider w-[10%]">
+              <CreateContractDialog
                 myDiv={
                   <div className="flex max-lg:hidden items-center justify-center w-20 h-9 bg-green-600 hover:bg-green-300 rounded-md cursor-pointer mr-2">
                     <LuPlus color="white" size={20} />
                     <span className="text-white">Add</span>
                   </div>
                 }
-                title={`Crie ${convertRoutes(slug)}`}
-                description="Escreva uma descrição."
+                title={`Crie ${convertRoutes('/contract')}`}
+                description="Informe os items."
                 action="Criar"
-                data={{ slug }}
+                data={{}}
                 func={create}
               />
             </th>
@@ -281,40 +314,50 @@ export const Dashboard = ({ slug }: ApiData) => {
           {files.map((k, i) => {
             return (
               <tr
-                key={k.id}
+                key={i}
                 className="border-t border-green-600 hover:bg-green-100"
               >
                 <td className="pl-1 h-16 text-2xl font-bold">{k.order}</td>
                 <td>
                   <div className="flex max-w-full">
                     <span className="text-xs line-clamp-3 lg:text-base">
-                      {k.description}
+                      {k.hired}
                     </span>
                   </div>
                 </td>
                 <td>
                   <span className="text-xs">
-                    {dayjs(k.createdAt).format('DD/MM/YY hh:mm A')}
+                    {dayjs(k.startsIn).format('DD/MM/YY hh:mm A')}
                   </span>
                 </td>
+                <td>
+                  <span className="text-xs">{`${k.duration} meses`}</span>
+                </td>
+                <td>
+                  <span className="text-xs">{`R$ ${Number(k.value!).toFixed(
+                    2
+                  )}`}</span>
+                </td>
                 <td className="pr-1">
-                  <UpdateDeleteDialog
+                  <UpdateDeleteContractDialog
                     myDiv={
                       <div className="flex items-center justify-center size-9 bg-green-200 hover:bg-green-600 rounded-md">
                         <LuMoreHorizontal color="green" size={20} />
                       </div>
                     }
                     data={{
-                      slug,
                       id: k.id,
                       order: k.order?.toString(),
-                      description: k.description,
-                      createdAt: k.createdAt,
+                      hired: k.hired,
+                      type: k.type as 'bidding' | 'publicinterest',
+                      duration: k.duration,
+                      value: k.value,
+                      startsIn: k.startsIn,
                     }}
                     edit={update}
                     del={exclude}
                     description="Escreva uma descrição."
-                    title={`${convertRoutes(slug)} ${k.order}`}
+                    title={`${convertRoutes('/contract')} ${k.order}`}
                   />
                 </td>
               </tr>
@@ -322,9 +365,9 @@ export const Dashboard = ({ slug }: ApiData) => {
           })}
         </tbody>
 
-        <tfoot>
-          <tr>
-            <td className="max-lg:hidden pl-2 py-2.5" colSpan={2}>
+        <tfoot className="w-full border-t border-green-600">
+          <tr className="h-16">
+            <td className="max-lg:hidden pl-2 py-2.5 text-left" colSpan={2}>
               {`Mostrando ${
                 count === 0
                   ? 0
@@ -334,7 +377,7 @@ export const Dashboard = ({ slug }: ApiData) => {
               } de ${count} itens`}
             </td>
 
-            <td className="lg:hidden pl-2 py-2.5" colSpan={2}>
+            <td className="lg:hidden pl-2 py-2.5 text-left" colSpan={2}>
               {`${
                 count === 0
                   ? 0
@@ -344,7 +387,7 @@ export const Dashboard = ({ slug }: ApiData) => {
               }/${count}`}
             </td>
 
-            <td className="pr-2 text-right" colSpan={3}>
+            <td className="pr-2 py-2.5 text-right items-end" colSpan={3}>
               <div className="inline-flex items-center gap-8">
                 <span className="max-lg:hidden">{`Mostrando página ${
                   count === 0 ? 0 : page
@@ -380,12 +423,12 @@ export const Dashboard = ({ slug }: ApiData) => {
             <LuPlus color="white" size={28} />
           </div>
         }
-        title={`Crie ${convertRoutes(slug)}`}
+        title={`Crie ${convertRoutes('/contract')}`}
         description="Escreva uma descrição."
         action="Criar"
-        data={{ slug }}
+        data={{ slug: '/contract' }}
         func={create}
       />
     </div>
   );
-};
+}

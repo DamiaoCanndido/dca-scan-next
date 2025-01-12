@@ -53,7 +53,7 @@ export default function Page() {
       });
       createCookies('user', res.data.username);
       createCookies('token', res.data.token);
-      router.replace('/decree');
+      router.replace('/contract');
     } catch (error) {
       if (error instanceof AxiosError) {
         toast({

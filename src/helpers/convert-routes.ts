@@ -1,4 +1,7 @@
 export const convertRoutes = (route: string): string => {
+  if (route === '/contract') {
+    return 'contrato';
+  }
   if (route === '/decree') {
     return 'decreto';
   }
@@ -9,4 +12,13 @@ export const convertRoutes = (route: string): string => {
     return 'portaria';
   }
   return 'ofício';
+};
+
+export const convertContract = (contract: string) => {
+  if (contract === 'bidding') {
+    return 'LICITAÇÃO';
+  }
+  if (contract === 'publicinterest') {
+    return 'INTERESSE PÚBLICO';
+  }
 };

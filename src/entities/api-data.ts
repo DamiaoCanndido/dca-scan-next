@@ -14,3 +14,15 @@ export interface TodoList {
   order?: string;
   createdAt?: string;
 }
+
+export interface ContractList {
+  id?: string;
+  hired?: string;
+  value?: string;
+  type?: string;
+  duration?: string;
+  order?: string;
+  ownerId?: string;
+  startsIn?: string;
+  createdAt?: string;
+}
