@@ -413,16 +413,16 @@ export default function Page() {
           </tr>
         </tfoot>
       </table>
-      <CreateDialog
+      <CreateContractDialog
         myDiv={
           <div className="flex justify-center items-center fixed lg:hidden bottom-4 left-[50%] -translate-x-1/2 bg-green-600 size-16 rounded-full">
-            <LuPlus color="white" size={28} />
+            <LuPlus color="white" size={20} />
           </div>
         }
         title={`Crie ${convertRoutes('/contract')}`}
-        description="Escreva uma descrição."
+        description="Informe os items."
         action="Criar"
-        data={{ slug: '/contract' }}
+        data={{}}
         func={create}
       />
     </div>
