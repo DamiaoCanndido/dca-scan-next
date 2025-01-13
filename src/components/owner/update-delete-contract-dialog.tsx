@@ -80,7 +80,7 @@ export const UpdateDeleteContractDialog = (props: HTMLProps) => {
       order: props.data.order,
       duration: String(props.data.duration),
       startsIn: props.data.startsIn!.slice(0, 16),
-      type: props.data.type as 'bidding' | 'publicinterest' | undefined,
+      type: props.data.type as 'publicinterest' | 'bidding' | undefined,
     },
   });
 
@@ -189,19 +189,19 @@ export const UpdateDeleteContractDialog = (props: HTMLProps) => {
                         onValueChange={(e) => {
                           field.onChange(e);
                         }}
-                        defaultValue="bidding"
+                        defaultValue="publicinterest"
                       >
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Escolha um ano" />
                         </SelectTrigger>
                         <SelectContent className="flex w-max">
                           <SelectGroup>
-                            <SelectItem value={'bidding'}>LICITAÇÃO</SelectItem>
-                          </SelectGroup>
-                          <SelectGroup>
                             <SelectItem value={'publicinterest'}>
                               INTERESSE PÚBLICO
                             </SelectItem>
+                          </SelectGroup>
+                          <SelectGroup>
+                            <SelectItem value={'bidding'}>LICITAÇÃO</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>

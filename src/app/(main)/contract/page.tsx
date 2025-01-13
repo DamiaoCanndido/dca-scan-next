@@ -13,7 +13,6 @@ import { convertContract, convertRoutes } from '@/helpers/convert-routes';
 import { ContractList } from '@/entities/api-data';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
-import { CreateDialog } from '@/components/owner/create-dialog';
 import { api } from '@/lib/axios';
 import { getCookie } from 'cookies-next';
 import { AxiosError } from 'axios';
@@ -36,7 +35,7 @@ import { UpdateDeleteContractDialog } from '@/components/owner/update-delete-con
 
 dayjs.extend(utc);
 
-const contractType = ['bidding', 'publicinterest'];
+const contractType = ['publicinterest', 'bidding'];
 
 export default function Page() {
   const { toast } = useToast();

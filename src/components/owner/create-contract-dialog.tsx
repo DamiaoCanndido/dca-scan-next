@@ -62,7 +62,7 @@ export const CreateContractDialog = (props: HTMLProps) => {
     startsIn: z.string().min(10, { message: 'Início incorreto' }),
     value: z.string().min(1, { message: 'Valor inválido.' }),
     duration: z.string().min(1, { message: 'Duração inválida.' }),
-    type: z.enum(['bidding', 'publicinterest']),
+    type: z.enum(['publicinterest', 'bidding']),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -73,7 +73,7 @@ export const CreateContractDialog = (props: HTMLProps) => {
       startsIn: '',
       value: '',
       duration: '',
-      type: 'bidding',
+      type: 'publicinterest',
     },
   });
 
@@ -134,19 +134,19 @@ export const CreateContractDialog = (props: HTMLProps) => {
                         onValueChange={(e) => {
                           field.onChange(e);
                         }}
-                        defaultValue="bidding"
+                        defaultValue="publicinterest"
                       >
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Escolha um ano" />
                         </SelectTrigger>
                         <SelectContent className="flex w-max">
                           <SelectGroup>
-                            <SelectItem value={'bidding'}>LICITAÇÃO</SelectItem>
-                          </SelectGroup>
-                          <SelectGroup>
                             <SelectItem value={'publicinterest'}>
                               INTERESSE PÚBLICO
                             </SelectItem>
+                          </SelectGroup>
+                          <SelectGroup>
+                            <SelectItem value={'bidding'}>LICITAÇÃO</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
