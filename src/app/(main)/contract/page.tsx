@@ -310,7 +310,7 @@ export default function Page() {
           {files.map((k, i) => {
             return (
               <tr
-                key={i}
+                key={k.id}
                 className="border-t border-green-600 hover:bg-green-100"
               >
                 <td className="pl-1 h-16 text-2xl font-bold">{k.order}</td>

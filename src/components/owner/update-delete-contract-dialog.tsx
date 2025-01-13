@@ -67,8 +67,8 @@ export const UpdateDeleteContractDialog = (props: HTMLProps) => {
       }),
     order: z.optional(z.string()),
     startsIn: z.string().min(10, { message: 'Início incorreto' }),
-    value: z.optional(z.string()),
-    duration: z.optional(z.string()),
+    value: z.optional(z.string().min(1, { message: 'Valor inválido.' })),
+    duration: z.optional(z.string().min(1, { message: 'Valor inválido.' })),
     type: z.enum(['bidding', 'publicinterest']),
   });
 

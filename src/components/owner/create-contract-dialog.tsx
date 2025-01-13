@@ -60,8 +60,8 @@ export const CreateContractDialog = (props: HTMLProps) => {
       }),
     order: z.optional(z.string()),
     startsIn: z.string().min(10, { message: 'Início incorreto' }),
-    value: z.string(),
-    duration: z.string(),
+    value: z.string().min(1, { message: 'Valor inválido.' }),
+    duration: z.string().min(1, { message: 'Duração inválida.' }),
     type: z.enum(['bidding', 'publicinterest']),
   });
 
