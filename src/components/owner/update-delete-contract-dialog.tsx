@@ -69,7 +69,7 @@ export const UpdateDeleteContractDialog = (props: HTMLProps) => {
     startsIn: z.string().min(10, { message: 'Início incorreto' }),
     value: z.optional(z.string().min(1, { message: 'Valor inválido.' })),
     duration: z.optional(z.string().min(1, { message: 'Valor inválido.' })),
-    type: z.enum(['bidding', 'publicinterest']),
+    type: z.enum(['bidding', 'publicinterest', 'services']),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -80,7 +80,11 @@ export const UpdateDeleteContractDialog = (props: HTMLProps) => {
       order: props.data.order,
       duration: String(props.data.duration),
       startsIn: props.data.startsIn!.slice(0, 16),
-      type: props.data.type as 'publicinterest' | 'bidding' | undefined,
+      type: props.data.type as
+        | 'publicinterest'
+        | 'bidding'
+        | 'services'
+        | undefined,
     },
   });
 
@@ -189,7 +193,7 @@ export const UpdateDeleteContractDialog = (props: HTMLProps) => {
                         onValueChange={(e) => {
                           field.onChange(e);
                         }}
-                        defaultValue="publicinterest"
+                        defaultValue={props.data.type}
                       >
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Escolha um ano" />
@@ -202,6 +206,9 @@ export const UpdateDeleteContractDialog = (props: HTMLProps) => {
                           </SelectGroup>
                           <SelectGroup>
                             <SelectItem value={'bidding'}>LICITAÇÃO</SelectItem>
+                          </SelectGroup>
+                          <SelectGroup>
+                            <SelectItem value={'services'}>SERVIÇO</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>

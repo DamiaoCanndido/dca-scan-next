@@ -21,4 +21,5 @@ export const convertContract = (contract: string) => {
   if (contract === 'publicinterest') {
     return 'INTERESSE PÚBLICO';
   }
+  return 'SERVIÇO';
 };

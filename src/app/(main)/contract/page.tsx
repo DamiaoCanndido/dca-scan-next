@@ -35,7 +35,7 @@ import { UpdateDeleteContractDialog } from '@/components/owner/update-delete-con
 
 dayjs.extend(utc);
 
-const contractType = ['publicinterest', 'bidding'];
+const contractType = ['publicinterest', 'bidding', 'services'];
 
 export default function Page() {
   const { toast } = useToast();
@@ -140,7 +140,6 @@ export default function Page() {
       );
       setCall(!call);
     } catch (error) {
-      console.log(error);
       if (error instanceof AxiosError) {
         toast({
           title: error.response?.data.message,
@@ -344,7 +343,7 @@ export default function Page() {
                       id: k.id,
                       order: k.order?.toString(),
                       hired: k.hired,
-                      type: k.type as 'bidding' | 'publicinterest',
+                      type: k.type as 'bidding' | 'publicinterest' | 'services',
                       duration: k.duration,
                       value: k.value,
                       startsIn: k.startsIn,
